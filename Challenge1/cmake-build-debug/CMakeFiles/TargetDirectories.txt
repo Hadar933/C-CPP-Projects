@@ -1,0 +1,3 @@
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Challenge1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Challenge1/cmake-build-debug/CMakeFiles/Challenge1.dir
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Challenge1/cmake-build-debug/CMakeFiles/edit_cache.dir
