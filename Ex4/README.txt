@@ -1,4 +1,4 @@
-PROJECT 4 (C++) - Neural networks, classes, operators overloading...
+*PROJECT 4 (C++) - Neural networks, classes, operators overloading...*
 -------------------------------------------------------------------------------
 
 created by:
