@@ -29,7 +29,10 @@ the project is loosely base on this video by 3Blue1Brown - check it out
 ### Try it yourself:
 
 #### using an interpreter(ex. Clion):
-  in edit configurations, add the following input: `w1 w2 w3 w4 b1 b2 b3 b4`
+  in edit configurations, add the following input:
+  
+  `w1 w2 w3 w4 b1 b2 b3 b4`
+  
   and run.
   *w_i represents a weight matrix and b_i represents a bias vector
 
