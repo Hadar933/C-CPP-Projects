@@ -37,6 +37,7 @@ the project is loosely base on this video by 3Blue1Brown - check it out
   comline the program using the supplied make file by typing to shell:
   
   `$ make mlpnetwork`
+  
   run the code using:
   
   `$ ./mlpnetwork w1 w2 w3 w4 b1 b2 b3 b4`
