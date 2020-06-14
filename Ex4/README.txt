@@ -78,5 +78,3 @@ Image processed:
                                                         
 
 Mlp result: 4 at probability: 0.996058
-Please insert image path:
-
