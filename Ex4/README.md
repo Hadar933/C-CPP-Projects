@@ -20,7 +20,7 @@ and outputs a "guess" for the number shown in the image.
 
 the network guesses correctly 96% of the time.
 
-the project is loosely base on this video by 3Blue1Brown - check it out
+the project is based on this video by 3Blue1Brown - check it out
 
 (https://www.youtube.com/watch?v=aircAruvnKk&t=107s)
 
