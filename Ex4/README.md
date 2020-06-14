@@ -21,6 +21,7 @@ and outputs a "guess" for the number shown in the image.
 the network guesses correctly 96% of the time.
 
 the project is loosely base on this video by 3Blue1Brown - check it out
+
 (https://www.youtube.com/watch?v=aircAruvnKk&t=107s)
 
 -------------------------------------------------------------------------------
@@ -34,8 +35,10 @@ the project is loosely base on this video by 3Blue1Brown - check it out
 
 #### from command line prompt:
   comline the program using the supplied make file by typing to shell:
+  
   `$ make mlpnetwork`
   run the code using:
+  
   `$ ./mlpnetwork w1 w2 w3 w4 b1 b2 b3 b4`
 
 #### while the program runs:
