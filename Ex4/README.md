@@ -1,7 +1,7 @@
-#PROJECT 4 (C++) - Neural networks, classes, operators overloading...#
+PROJECT 4 (C++) - Neural networks, classes, operators overloading...
 -------------------------------------------------------------------------------
 
-###created by:###
+###created by:
 Hadar Sharvit
 
 -------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ the project is loosely base on this video by 3Blue1Brown - check it out
   
   -------------------------------------------------------------------------------
 ###example:###
-  
+ ``` 
 Please insert image path:
 im2
 Image processed:
@@ -79,3 +79,4 @@ Image processed:
                                                         
 
 Mlp result: 4 at probability: 0.996058
+```
