@@ -41,6 +41,7 @@ Try it yourself:
   you will be asked to provide a binary photo
   we have provided several options (im0,im1,...im9). so just type im the name of
   the photo you wish to run on.
+  press q to finish
   
   -------------------------------------------------------------------------------
 example:
