@@ -1,17 +1,17 @@
-#PROJECT 4 (C++) - Neural networks, classes, operators overloading...
+#PROJECT 4 (C++) - Neural networks, classes, operators overloading...#
 -------------------------------------------------------------------------------
 
-###created by:
+###created by:###
 Hadar Sharvit
 
 -------------------------------------------------------------------------------
 
-###Institution:
+###Institution:###
 the Hebrew university of Jerusalem
 
 -------------------------------------------------------------------------------
 
-###Description:
+###Description:###
 
 in this project i've built a neural network that takes as inputs a
 28 * 28 binary image representing some number between 0 to 9,
@@ -24,27 +24,27 @@ the project is loosely base on this video by 3Blue1Brown - check it out
 
 -------------------------------------------------------------------------------
 
-###Try it yourself:
+###Try it yourself:###
 
-####using an interpreter(ex. Clion):
+####using an interpreter(ex. Clion):####
   in edit configurations, add the following input: w1 w2 w3 w4 b1 b2 b3 b4
   and run.
   *w_i represents a weight matrix and b_i represents a bias vector
 
-####from command line prompt:
+####from command line prompt:####
   comline the program using the supplied make file by typing to shell:
   $ make mlpnetwork
   run the code using:
   $ ./mlpnetwork w1 w2 w3 w4 b1 b2 b3 b4
 
-####while the program runs:
+####while the program runs:####
   you will be asked to provide a binary photo
   we have provided several options (im0,im1,...im9). so just type im the name of
   the photo you wish to run on.
   press q to finish
   
   -------------------------------------------------------------------------------
-###example:
+###example:###
   
 Please insert image path:
 im2
