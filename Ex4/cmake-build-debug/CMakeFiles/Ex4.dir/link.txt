@@ -1,0 +1,1 @@
+/usr/bin/c++.exe -g  -Wl,--enable-auto-import CMakeFiles/Ex4.dir/main.cpp.o CMakeFiles/Ex4.dir/Matrix.cpp.o CMakeFiles/Ex4.dir/Activation.cpp.o CMakeFiles/Ex4.dir/Dense.cpp.o CMakeFiles/Ex4.dir/MlpNetwork.cpp.o  -o Ex4.exe -Wl,--out-implib,libEx4.dll.a -Wl,--major-image-version,0,--minor-image-version,0 

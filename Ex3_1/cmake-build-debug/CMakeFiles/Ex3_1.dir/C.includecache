@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex3_1/RBTree.c
+stdbool.h
+-
+stdlib.h
+-
+stdio.h
+-
+string.h
+-
+RBTree.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex3_1/RBTree.h
+Structs.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex3_1/Structs.h
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex3_1/RBTree.h
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex3_1/Structs.h
+RBTree.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex3_1/RBTree.h
+

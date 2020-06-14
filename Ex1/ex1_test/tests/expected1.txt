@@ -1,0 +1,19 @@
+Enter student info. To exit press q, then enter
+ERROR:
+in line 0
+Enter student info. To exit press q, then enter
+ERROR:
+in line 1
+Enter student info. To exit press q, then enter
+ERROR:
+in line 2
+Enter student info. To exit press q, then enter
+ERROR:
+in line 3
+Enter student info. To exit press q, then enter
+ERROR:
+in line 4
+Enter student info. To exit press q, then enter
+ERROR:
+in line 5
+Enter student info. To exit press q, then enter

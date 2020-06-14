@@ -6,7 +6,9 @@
 #define LINE_LEN 60
 #define LINES 5500
 #define ASCII_A 65
-#define ASCII_Z 122
+#define ASCII_Z 90
+#define ASCII_LOWER_A 97
+#define ASCII_LOWER_Z 122
 #define ASCII_SP 32
 #define ASCII_HYP 45
 #define ASCII_COMMA 44
@@ -15,8 +17,10 @@
 #define MIN_GRADE 0
 #define MAX_GRADE 100
 
+int validReturn = 0;
+int inValidReturn = 1;
 int gStudCount = 0;
-int gLineCount = -1;
+int gLineCount = 0;
 
 /**
  * struct of type student, contains all the required data to initialize a student as requested.
@@ -52,9 +56,9 @@ int notTenDigits(double num)
 {
     if ((floor(log10((num))) + 1) != 10)
     {
-        return 1;
+        return inValidReturn;
     }
-    return 0;
+    return validReturn;
 }
 
 /**
@@ -65,14 +69,16 @@ int notTenDigits(double num)
 int nameBadChard(char *name)
 {
     for (int i = 0; i < (int) strlen(name); i++)
-    { // checking ASCII values (A-Z: 65-122, '-':45, ' ': 32)
-        if ((name[i] < ASCII_A || name[i] > ASCII_Z) &&
-            (name[i] != ASCII_SP && name[i] != ASCII_HYP))
+    { // checking ASCII values
+        if ((name[i] < ASCII_A || name[i] > ASCII_Z) && (name[i] < ASCII_LOWER_A || name[i] > ASCII_LOWER_Z))
         {
-            return 1;
+            if (name[i] != ASCII_SP && name[i] != ASCII_HYP)
+            {
+                return inValidReturn;
+            }
         }
     }
-    return 0;
+    return validReturn;
 }
 
 /**
@@ -83,13 +89,17 @@ int nameBadChard(char *name)
 int badCharsIn(char *strVal)
 {
     for (int i = 0; i < (int) strlen(strVal); i++)
-    { // checking ASCII values (A-Z: 65-122, '-':45)
-        if ((strVal[i] < ASCII_A || strVal[i] > ASCII_Z) && (strVal[i] != ASCII_HYP))
+    { // checking ASCII values
+        if ((strVal[i] < ASCII_A || strVal[i] > ASCII_Z) && (strVal[i] < ASCII_LOWER_A || strVal[i] > ASCII_LOWER_Z))
         {
-            return 1;
+            if (strVal[i] != ASCII_HYP)
+            {
+                return inValidReturn;
+            }
+
         }
     }
-    return 0;
+    return validReturn;
 }
 
 /**
@@ -97,15 +107,8 @@ int badCharsIn(char *strVal)
  */
 void printLine()
 {
-    if (gLineCount == -1)
-    {
-        printf("in line %d\n", gLineCount + 1);
-        gLineCount++;
-    }
-    else
-    {
-        printf("in line %d\n", gLineCount);
-    }
+    printf("in line %d\n", gLineCount);
+    gLineCount++;
 }
 
 /**
@@ -116,17 +119,19 @@ int noLettersIn(char ID[])
 {
 
     int i;
+    int asciiZero = 48;
+    int asciiNine = 57;
     for (i = 0; i < (int) strlen(ID); i++)
     {
-        if (ID[i] < 48 || ID[i] > 57)
+        if (ID[i] < asciiZero || ID[i] > asciiNine)
         {
             printf("ERROR: info must match specified format\n");
             printLine();
-            gLineCount++;
-            return 0;
+
+            return validReturn;
         }
     }
-    return 1;
+    return inValidReturn;
 }
 
 /**
@@ -141,36 +146,37 @@ int checkValidInput(float ID, char *name, float grade, float age, char *country,
     {
         printf("ERROR: id must be a 10 digits number that does not start with 0\n");
         valid = 0;
+        printLine();
     }
     else if (nameBadChard(name))
     {
         printf("ERROR: name can only contain alphabetic characters, whitespaces or '-'\n");
         valid = 0;
+        printLine();
     }
     else if (grade < MIN_GRADE || grade > MAX_GRADE)
     {
         printf("ERROR: grade must be an integer between 0 and 100\n");
         valid = 0;
+        printLine();
     }
     else if (age < MIN_AGE || age > MAX_AGE)
     {
         printf("ERROR: age must be an integer between 18 and 120\n");
         valid = 0;
+        printLine();
     }
     else if (badCharsIn(country))
     {
         printf("ERROR: country can only contain alphabetic characters or '-'\n");
         valid = 0;
+        printLine();
     }
     else if (badCharsIn(city))
     {
         printf("ERROR: city can only contain alphabetic characters or '-'\n");
         valid = 0;
-    }
-    if (!valid)
-    {
-        printf("in line %d\n", gLineCount);
-
+        printLine();
     }
     return valid;
 
@@ -185,7 +191,7 @@ int best()
     int bestStudent = 0;
     if (gStudCount == 0)
     {
-        return 0;
+        return validReturn;
     }
     for (int i = 0; i <= gStudCount; i++)
     {
@@ -200,7 +206,7 @@ int best()
            gStudArray[bestStudent].name, (int) gStudArray[bestStudent].grade,
            (int) gStudArray[bestStudent].age, gStudArray[bestStudent].country,
            gStudArray[bestStudent].city);
-    return 0;
+    return validReturn;
 }
 
 /**
@@ -224,8 +230,7 @@ int hasSixFields(char data[])
     }
     printf("ERROR: info must match specified format\n");
     printLine();
-    gLineCount++;
-    return 0;
+    return validReturn;
 }
 
 /**
@@ -240,10 +245,14 @@ int getData()
     do
     {
         printf("Enter student info. To exit press q, then enter\n");
-        fgets(data, LINES, stdin);
+        if (fgets(data, LINES, stdin) == NULL)
+        {
+            printf("ERROR: info must match specified format\n");
+            printLine();
+            return inValidReturn;
+        }
         if (data[0] != 'q' && hasSixFields(data))
         {
-            gLineCount++;
             sscanf(data, "%[^,], %[^,], %f, %f, %[^,], %[^\n]\n ", strID, name, &grade, &age, country,
                    city);
             sscanf(strID, "%lf", &ID);
@@ -260,10 +269,11 @@ int getData()
                 // adding the students data to a global gStudArray
                 gStudArray[gStudCount] = s;
                 gStudCount++;
+                gLineCount++;
             }
         }
     } while (data[0] != 'q'); // user hasn't typed 'q' to exit
-    return 0;
+    return validReturn;
 }
 
 /**
@@ -398,9 +408,12 @@ int main(int argc, char *argv[])
     if (argc != 2)
     {
         printf("USAGE: sortStudents <action>\n");
-        return 1;
+        return inValidReturn;
     }
-    getData();
+    if (getData())
+    {
+        return inValidReturn;
+    }
 
     if (strcmp(argv[1], "best") == 0)
     {
@@ -430,7 +443,7 @@ int main(int argc, char *argv[])
     {
         printf("USAGE: either best,merge or quick!");
 
-        return 1;
+        return inValidReturn;
     }
-    return 0;
+    return validReturn;
 }

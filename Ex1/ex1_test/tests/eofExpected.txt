@@ -1,0 +1,4 @@
+Enter student info. To exit press q, then enter
+Enter student info. To exit press q, then enter
+ERROR:
+in line 1

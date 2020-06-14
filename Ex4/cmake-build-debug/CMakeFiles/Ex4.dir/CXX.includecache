@@ -1,0 +1,70 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Activation.cpp
+cmath
+-
+Activation.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Activation.h
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Activation.h
+Matrix.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Matrix.h
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Dense.cpp
+Dense.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Dense.h
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Dense.h
+Matrix.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Matrix.h
+Activation.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Activation.h
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Digit.h
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Matrix.cpp
+Matrix.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Matrix.h
+string
+-
+iostream
+-
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Matrix.h
+fstream
+-
+iostream
+-
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/MlpNetwork.cpp
+iostream
+-
+MlpNetwork.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/MlpNetwork.h
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/MlpNetwork.h
+Digit.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Digit.h
+Matrix.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Matrix.h
+Dense.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Dense.h
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/main.cpp
+fstream
+-
+Matrix.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Matrix.h
+Activation.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Activation.h
+Dense.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/Dense.h
+MlpNetwork.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex4/MlpNetwork.h
+

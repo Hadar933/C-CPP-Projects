@@ -1,0 +1,7 @@
+1234567890,Rhett Vargas,101,29,United-Kingdom,London
+1234567890,Rhett Vargas,-50,29,United-Kingdom,London
+1234567890,Rhett Vargas,5000,29,United-Kingdom,London
+1234567890,Rhett Vargas,g,29,United-Kingdom,London
+1234567890,Rhett Vargas,0,29,United-Kingdom,London
+1234567890,Rhett Vargas,100,29,United-Kingdom,London
+q

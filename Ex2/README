@@ -1,0 +1,78 @@
+                                                           ____
+,-.----.       ,---,.   ,---,           ,---,            ,'  , `.    ,---,.
+\    /  \    ,'  .' |  '  .' \        .'  .' `\       ,-+-,.' _ |  ,'  .' |
+;   :    \ ,---.'   | /  ;    '.    ,---.'     \   ,-+-. ;   , ||,---.'   |
+|   | .\ : |   |   .':  :       \   |   |  .`\  | ,--.'|'   |  ;||   |   .'
+.   : |: | :   :  |-,:  |   /\   \  :   : |  '  ||   |  ,', |  '::   :  |-,
+|   |  \ : :   |  ;/||  :  ' ;.   : |   ' '  ;  :|   | /  | |  ||:   |  ;/|
+|   : .  / |   :   .'|  |  ;/  \   \'   | ;  .  |'   | :  | :  |,|   :   .'
+;   | |  \ |   |  |-,'  :  | \  \ ,'|   | :  |  ';   . |  ; |--' |   |  |-,
+|   | ;\  \'   :  ;/||  |  '  '--'  '   : | /  ; |   : |  | ,    '   :  ;/|
+:   ' | \.'|   |    \|  :  :        |   | '` ,/  |   : '  |/     |   |    \
+:   : :-'  |   :   .'|  | ,'        ;   :  .'    ;   | |`-'      |   :   .'
+|   |.'    |   | ,'  `--''          |   ,.'      |   ;/          |   | ,'
+`---'      `----'                   '---'        '---'           `----'
+
+Note: Runs on aquarium computers ONLY! (if runs somewhere else, then cool)
+
+***************************************************************************
+**                                                                       **
+** The Super-Premium deal:                                               **
+** - Tars your file                                                      **
+** - Runs presubmission tests                                            **
+** - Runs style check                                                    **
+** - Runs Valgrind                                                       **
+** - Runs other stuff (easy to modify)                                   **
+**                                                                       **
+***************************************************************************
+
+===========================================================================
+* Contains:                                                               *
+*-------------------------------------------------------------------------*
+* - test.sh: The main tester.                                             *
+* - valTest.sh: The valgrind mem-leak check.                              *
+* - validFiles/: Contains valid files to test with.                       *
+* - invalidFiles/: Contains invalid files to test with.                   *
+* - fileGenerator.py: Python code that generates valid, random files.     *
+* - outputs/: Contains the results for the test (will be created          *
+*   AFTER running the tests).                                             *
+* - valLog.txt: Contains the valgrind test results (will be created       *
+*   AFTER running the tests).                                             *
+===========================================================================
+* Extracting:                                                             *
+*-------------------------------------------------------------------------*
+* Put ex2test.tar in the same folder as RailWayPlanner.c and run these 2: *
+* (1) extract tar file:                                                   *
+tar -xvf ex2test.tar
+* (2) grant execute permission for test.sh and valTest.sh                 *
+chmod +x test.sh valTest.sh
+===========================================================================
+* Running:                                                                *
+*-------------------------------------------------------------------------*
+* Run this command:                                                       *
+./test.sh
+* If you don't want to do tarring, presubmit, style check run THIS:       *
+./test.sh -short
+* Run this for valgrind test:                                             *
+./valTest.sh
+===========================================================================
+* Comparing:                                                              *
+*-------------------------------------------------------------------------*
+* A message in the end will tell if you passed all tests. Anyway, inside  *
+* outputs/, 3 files will be generated:                                    *
+*   (1) userOutput.txt: Your output.                                      *
+*   (2) schoolOutput.txt: School's output.                                *
+*   (3) diff.txt: The result of diff on the last 2.                       *
+* You can use them to compare the your vs. expected results.              *
+*                                                                         *
+* For valgrind tests, the results will be printed to the terminal,        *
+* and to valLog.txt                                                       *
+===========================================================================
+* Modifying:                                                              *
+*-------------------------------------------------------------------------*
+* - You can change the test files in validFiles and invalidFiles.         *
+* - You can change fileGenerator.py and play with its parameters.         *
+===========================================================================
+
+Have fun
+Idan Orzach

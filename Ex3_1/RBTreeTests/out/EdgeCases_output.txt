@@ -1,0 +1,31 @@
+TEST: insert NULL
+returned value: 0
+
+TEST: find NULL
+returned value: 0
+
+TEST: delete NULL
+returned value: 0
+
+TEST: find in empty Tree
+returned value: 0
+
+TEST: foreach on empty Tree
+returned value: 1
+
+TEST: foreach with NULL as args
+returned value: 1
+
+TEST: insert on NULL tree
+returned value: 0
+
+TEST: delete on NULL tree
+returned value: 0
+
+TEST: search on NULL tree
+returned value: 0
+
+TEST: foreach on NULL tree
+returned value: 0
+
+TEST DONE!

@@ -1,0 +1,16 @@
+Enter student info. To exit press q, then enter
+ERROR:
+in line 0
+Enter student info. To exit press q, then enter
+ERROR:
+in line 1
+Enter student info. To exit press q, then enter
+ERROR:
+in line 2
+Enter student info. To exit press q, then enter
+ERROR:
+in line 3
+Enter student info. To exit press q, then enter
+Enter student info. To exit press q, then enter
+Enter student info. To exit press q, then enter
+best student info is: 1234567890,Rhett Vargas,100,29,United-Kingdom,London

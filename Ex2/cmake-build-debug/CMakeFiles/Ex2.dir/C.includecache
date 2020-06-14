@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex2/RailWayPlanner.c
+stdio.h
+-
+string.h
+-
+stdlib.h
+-
+math.h
+-
+stdbool.h
+-
+ctype.h
+-
+limits.h
+-
+

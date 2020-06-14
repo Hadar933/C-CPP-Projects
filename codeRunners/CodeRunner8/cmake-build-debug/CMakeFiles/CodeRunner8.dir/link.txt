@@ -1,0 +1,1 @@
+/usr/bin/cc -g  -Wl,--enable-auto-import CMakeFiles/CodeRunner8.dir/main.c.o  -o CodeRunner8.exe -Wl,--out-implib,libCodeRunner8.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
