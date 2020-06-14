@@ -46,7 +46,8 @@ the project is based on this video by 3Blue1Brown - check it out
   `$ ./mlpnetwork w1 w2 w3 w4 b1 b2 b3 b4`
 
 #### while the program runs:
-  you will be asked to provide a binary photo
+  you will be asked to provide a binary photo.
+  
   we have provided several options (im0,im1,...im9). so just type im the name of
   the photo you wish to run on.
   press q to finish
