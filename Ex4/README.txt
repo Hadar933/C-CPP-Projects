@@ -41,3 +41,42 @@ Try it yourself:
   you will be asked to provide a binary photo
   we have provided several options (im0,im1,...im9). so just type im the name of
   the photo you wish to run on.
+  
+  -------------------------------------------------------------------------------
+example:
+  
+Please insert image path:
+im2
+Image processed:
+                                                        
+                                                        
+                                                        
+                                                        
+                                                        
+                                        ******          
+        ****                            ******          
+        ****                            ******          
+        ****                          ******            
+        ****                          ******            
+      ******                          ******            
+      ******                          ******            
+      ******                        ******              
+      ******                    **********              
+      ******      ************************              
+      ****************************  ****                
+        ****************          ******                
+                                  ******                
+                                  ******                
+                                  ******                
+                                  ******                
+                                  ******                
+                                  ******                
+                                  ******                
+                                  ******                
+                                                        
+                                                        
+                                                        
+
+Mlp result: 4 at probability: 0.996058
+Please insert image path:
+
