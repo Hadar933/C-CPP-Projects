@@ -12,15 +12,58 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="631429c3-87df-4cce-a6a0-c2ab8d86e653" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Ex1.dir/manageStudents.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Ex1.dir/manageStudents.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Ex1.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Ex1.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ex1.tar" beforeDir="false" afterPath="$PROJECT_DIR$/ex1.tar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manageStudents.c" beforeDir="false" afterPath="$PROJECT_DIR$/manageStudents.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiff-master/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiff-master/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiff-master/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiff-master/autoDiff.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiff-master/defaults.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiff-master/exrex.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiff-master/tests.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiff.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/defaults.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/def.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tester.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/testerTools.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/eofExpected.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/eofTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/expected1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/expected2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/expected3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/expected4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/expected5.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/expected6.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/expected7.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/expectedMaxSize.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/test1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/test2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/test3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/test4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/test5.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/test6.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/test7.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/testMaxSize.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex1_test/tests/usageTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/exrex.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/eofExpected.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/eofTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/expected1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/expected2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/expected3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/expected4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/expected5.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/expected6.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/expected7.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/expectedMaxSize.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test5.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test6.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test7.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/testMaxSize.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/usageTest.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,6 +149,7 @@
       <workItem from="1587411891523" duration="19000" />
       <workItem from="1587412150769" duration="252000" />
       <workItem from="1587470310625" duration="1867000" />
+      <workItem from="1592214739626" duration="8000" />
     </task>
     <servers />
   </component>
@@ -165,10 +209,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="0" y="58" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1586513825928" />
-    <state x="24" y="71" key="com.intellij.ide.util.TipDialog" timestamp="1587470320116">
+    <state x="24" y="71" key="com.intellij.ide.util.TipDialog" timestamp="1592214738870">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="24" y="71" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1587470320116" />
+    <state x="24" y="71" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1592214738870" />
     <state x="116" y="58" key="refactoring.ChangeSignatureDialog" timestamp="1585677959335">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
