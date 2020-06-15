@@ -37,7 +37,7 @@ the project is based on this video by 3Blue1Brown - check it out
   *w_i represents a weight matrix and b_i represents a bias vector
 
 #### from command line prompt:
-  comline the program using the supplied make file by typing to shell:
+  compile the program using the supplied make file by typing to shell:
   
   `$ make mlpnetwork`
   
