@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex5/RecommenderSystem.cpp
+fstream
+-
+filesystem
+-
+RecommenderSystem.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex5/RecommenderSystem.h
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex5/RecommenderSystem.h
+string
+-
+iostream
+-
+vector
+-
+
