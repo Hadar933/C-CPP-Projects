@@ -123,32 +123,32 @@ Ex5/fast:
 	$(MAKE) -f CMakeFiles/Ex5.dir/build.make CMakeFiles/Ex5.dir/build
 .PHONY : Ex5/fast
 
-main.o: main.cpp.o
+RecommenderSystem.o: RecommenderSystem.cpp.o
 
-.PHONY : main.o
+.PHONY : RecommenderSystem.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) -f CMakeFiles/Ex5.dir/build.make CMakeFiles/Ex5.dir/main.cpp.o
-.PHONY : main.cpp.o
+RecommenderSystem.cpp.o:
+	$(MAKE) -f CMakeFiles/Ex5.dir/build.make CMakeFiles/Ex5.dir/RecommenderSystem.cpp.o
+.PHONY : RecommenderSystem.cpp.o
 
-main.i: main.cpp.i
+RecommenderSystem.i: RecommenderSystem.cpp.i
 
-.PHONY : main.i
+.PHONY : RecommenderSystem.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) -f CMakeFiles/Ex5.dir/build.make CMakeFiles/Ex5.dir/main.cpp.i
-.PHONY : main.cpp.i
+RecommenderSystem.cpp.i:
+	$(MAKE) -f CMakeFiles/Ex5.dir/build.make CMakeFiles/Ex5.dir/RecommenderSystem.cpp.i
+.PHONY : RecommenderSystem.cpp.i
 
-main.s: main.cpp.s
+RecommenderSystem.s: RecommenderSystem.cpp.s
 
-.PHONY : main.s
+.PHONY : RecommenderSystem.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) -f CMakeFiles/Ex5.dir/build.make CMakeFiles/Ex5.dir/main.cpp.s
-.PHONY : main.cpp.s
+RecommenderSystem.cpp.s:
+	$(MAKE) -f CMakeFiles/Ex5.dir/build.make CMakeFiles/Ex5.dir/RecommenderSystem.cpp.s
+.PHONY : RecommenderSystem.cpp.s
 
 # Help Target
 help:
@@ -159,9 +159,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... Ex5"
 	@echo "... edit_cache"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... RecommenderSystem.o"
+	@echo "... RecommenderSystem.i"
+	@echo "... RecommenderSystem.s"
 .PHONY : help
 
 

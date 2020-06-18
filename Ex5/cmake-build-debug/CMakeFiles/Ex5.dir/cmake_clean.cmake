@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/Ex5.dir/main.cpp.o"
+  "CMakeFiles/Ex5.dir/RecommenderSystem.cpp.o"
   "Ex5.exe"
   "Ex5.pdb"
   "libEx5.dll.a"

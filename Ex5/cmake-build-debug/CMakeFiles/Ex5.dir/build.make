@@ -57,27 +57,27 @@ include CMakeFiles/Ex5.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/Ex5.dir/flags.make
 
-CMakeFiles/Ex5.dir/main.cpp.o: CMakeFiles/Ex5.dir/flags.make
-CMakeFiles/Ex5.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex5/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Ex5.dir/main.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Ex5.dir/main.cpp.o -c "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex5/main.cpp"
+CMakeFiles/Ex5.dir/RecommenderSystem.cpp.o: CMakeFiles/Ex5.dir/flags.make
+CMakeFiles/Ex5.dir/RecommenderSystem.cpp.o: ../RecommenderSystem.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex5/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Ex5.dir/RecommenderSystem.cpp.o"
+	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Ex5.dir/RecommenderSystem.cpp.o -c "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex5/RecommenderSystem.cpp"
 
-CMakeFiles/Ex5.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Ex5.dir/main.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex5/main.cpp" > CMakeFiles/Ex5.dir/main.cpp.i
+CMakeFiles/Ex5.dir/RecommenderSystem.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Ex5.dir/RecommenderSystem.cpp.i"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex5/RecommenderSystem.cpp" > CMakeFiles/Ex5.dir/RecommenderSystem.cpp.i
 
-CMakeFiles/Ex5.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Ex5.dir/main.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex5/main.cpp" -o CMakeFiles/Ex5.dir/main.cpp.s
+CMakeFiles/Ex5.dir/RecommenderSystem.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Ex5.dir/RecommenderSystem.cpp.s"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex5/RecommenderSystem.cpp" -o CMakeFiles/Ex5.dir/RecommenderSystem.cpp.s
 
 # Object files for target Ex5
 Ex5_OBJECTS = \
-"CMakeFiles/Ex5.dir/main.cpp.o"
+"CMakeFiles/Ex5.dir/RecommenderSystem.cpp.o"
 
 # External object files for target Ex5
 Ex5_EXTERNAL_OBJECTS =
 
-Ex5.exe: CMakeFiles/Ex5.dir/main.cpp.o
+Ex5.exe: CMakeFiles/Ex5.dir/RecommenderSystem.cpp.o
 Ex5.exe: CMakeFiles/Ex5.dir/build.make
 Ex5.exe: CMakeFiles/Ex5.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex5/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable Ex5.exe"
