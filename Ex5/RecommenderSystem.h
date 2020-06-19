@@ -8,16 +8,23 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <map>
+#include <fstream>
+#include <filesystem>
+#include <numeric>
 
 #define SUCCESS 0
 #define FAILURE 1
-#define INVALID -1
+#define INVALID (-1)
 #define BAD_PATH "Unable to open file "
 #define BAD_USER "USER NOT FOUND"
+#define NA 0
+#define START 0
 
 using std::string;
 using std::cerr;
 using std::endl;
+using std::vector;
 
 /**
  *based on movie attributes file and a user ranks file, the class is responsible
@@ -34,22 +41,13 @@ public:
 	 */
 	static bool loadData(const string &moviesAttributesFilePath, const string &userRanksFilePath);
 
-	/**
-	 * parses one of the files
-	 * @param filePath - path to file to parse
-	 * @param isUserRank - represents that the file is the user ranks
-	 * @return
-	 */
-	bool parseFile(const string &filePath, bool isUserRank);
-
-	bool parseFeatures(const string &moviesAttributesFilePath);
 
 	/**
 	 *generates a recommendation based on the content
 	 * @param username - customer's user name
 	 * @return string - representing the recommended movie returned by the algorithm
 	 */
-	std::string recommendByContent(char *username);
+	string recommendByContent(const string &username);
 
 	/**
 	 * generates a prediction for a user's rank to a movie he hasn't seen yet, based
@@ -67,19 +65,63 @@ public:
 	 * @param k - number of movies that are most similar to movieName
 	 * @return string representing the name of the recommended movie
 	 */
-	std::string recommendByCF(string userName, int k);
+	string recommendByCF(string userName, int k);
+
 
 private:
+	inline static vector<string> _movieNamesVec;
+	inline static std::map<string, vector<int>> _movieTraitsMap; // movieName:traits vec(scary,
+	// funny etc..)
+	inline static std::map<string, vector<int>> _userRankingsMap;
+	// userName:vector of (movie:rank) pairs
+
 	/**
-	 * returns a file's size (assume file exists)
-	 * @param file some file objecy
-	 * @return file's size
+	 * parses one of the files
+	 * @param filePath - path to file to parse
+	 * @param isUserRankFile - represents that the file is the user ranks
+	 * @return
 	 */
-	static int _getFileSize(std::ifstream &file);
+	static bool _parseFile(const string &filePath, bool isUserRankFile);
 
-	static void parseEachLine(string &line, std::vector<string> &vec);
+	/**
+	 * parses each line, skipping spaces and inserting the values to provided vector
+	 * @param line some line to parse
+	 * @param vec vector of ints to insert line values to
+	 */
+	static void _parseEachLine(const string &line, vector<int> &vec);
 
-	std::vector<string> _movieNamesVec;
+	/**
+	 * parses each line, skipping spaces and inserting the values to provided vector
+	 * @param line some line to parse
+	 * @param vec vector of string to insert line values to
+	 */
+	static void _parseStringLine(const string &line, vector<string> &vec);
+
+	/**
+	 * fetches the first word in a line, which is either a userName or a movieName
+	 * @param line some line to parse
+	 * @return first word in line
+	 */
+	static string _popFirstWord(string &line);
+
+	/**
+	 * calculates the average value of all items in vector
+	 * @param vec some vector of numbers
+	 * @return
+	 */
+	static double _getAverage(const vector<int> &vec);
+
+	static vector<int> generatePrefVec(const vector <int> &normVec);
+	/**
+	 * multiplies each element of vec by val(some const)
+	 */
+	static void _multByConst(int val, vector<int> &vec);
+
+	/**
+	 * adds other vec to vec (same size vectors)
+	 */
+	static void _addUpVects(vector<int> &vec, const vector<int> &other);
+
 
 };
 

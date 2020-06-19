@@ -7,9 +7,7 @@
 #IncludeRegexTransform: 
 
 /cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex5/RecommenderSystem.cpp
-fstream
--
-filesystem
+algorithm
 -
 RecommenderSystem.h
 /cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/Ex5/RecommenderSystem.h
@@ -20,5 +18,13 @@ string
 iostream
 -
 vector
+-
+map
+-
+fstream
+-
+filesystem
+-
+numeric
 -
 
