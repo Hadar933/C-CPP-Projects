@@ -59,7 +59,7 @@ public:
 	 * @param k - number of movies that are most similar to movieName
 	 * @return -1 if no such user or movie, float predicted rating otherwize
 	 */
-	double predictMovieScoreForUser(string movieName, string userName, int k);
+	double predictMovieScoreForUser(string &movieName, string &userName, int k);
 
 	/**
 	 * recommends a movie to the user based on the predictMovieScoreForUser algorithm
@@ -71,7 +71,8 @@ public:
 
 
 private:
-	inline static vector<string> _movieNamesVec;
+
+	inline static vector<string> _movieNames;
 	inline static std::map<string, vector<int>> _movieTraitsMap; // movieName:traits vec(scary,
 	// funny etc..)
 	inline static std::map<string, vector<int>> _userRankingsMap;
@@ -140,9 +141,29 @@ private:
 	 */
 	static double norm(vector<int> &vec);
 
+	/**
+	 * calculate the similarity between two vectors, (the argument of arccos)
+	 * @param vec1
+	 * @param vec2
+	 * @return some 0<=value<=1, where 0 means no similarity and 1 means best similarity
+	 */
 	static double compAngle(vector<int> &vec1, vector<int> &vec2);
 
+	/**
+	 * for each movie a user hasent watched, calculates similarity, and extracts the movie
+	 * with the greatest resemblance
+	 * @param prefVec - preferences vector as calculated in generatePrefVec function
+	 * @param userRanks - the ranks a user has given to all movies (NA for which he hasnt watched)
+	 * @return name of the movie with the biggest resemblance
+	 */
 	static string findResemblance(vector<int> &prefVec, vector<int> &userRanks);
+
+	static vector<string> didWatch(string &username);
+
+	static vector<string> didNotWatch(string &username);
+
+	static double forecastRating(vector<std::pair<string,double>> &dataVec,int k);
+
 
 
 };
