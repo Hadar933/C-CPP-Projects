@@ -12,6 +12,8 @@
 #include <fstream>
 #include <filesystem>
 #include <numeric>
+#include <algorithm>
+#include <cmath>
 
 #define SUCCESS 0
 #define FAILURE 1
@@ -111,7 +113,8 @@ private:
 	 */
 	static double _getAverage(const vector<int> &vec);
 
-	static vector<int> generatePrefVec(const vector <int> &normVec);
+	static vector<int> generatePrefVec(const vector<int> &normVec);
+
 	/**
 	 * multiplies each element of vec by val(some const)
 	 */
@@ -121,6 +124,25 @@ private:
 	 * adds other vec to vec (same size vectors)
 	 */
 	static void _addUpVects(vector<int> &vec, const vector<int> &other);
+
+	/**
+	 * computes dot product of two vectors of same length
+	 * @param vec1
+	 * @param vec2
+	 * @return dot product v1*v2
+	 */
+	static int dotProduct(vector<int> &vec1, const vector<int> &vec2);
+
+	/**
+	 * calculates a norma of vector: sqrt(v[i]^2+...+v[n]^2)
+	 * @param vec some vector
+	 * @return norma
+	 */
+	static double norm(vector<int> &vec);
+
+	static double compAngle(vector<int> &vec1, vector<int> &vec2);
+
+	static string findResemblance(vector<int> &prefVec, vector<int> &userRanks);
 
 
 };

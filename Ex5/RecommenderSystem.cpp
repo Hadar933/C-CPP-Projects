@@ -1,4 +1,4 @@
-#include <algorithm>
+
 #include "RecommenderSystem.h"
 
 bool gFirstLine = true;
@@ -85,6 +85,7 @@ RecommenderSystem::loadData(const string &moviesAttributesFilePath, const string
 string RecommenderSystem::recommendByContent(const string &username)
 {
 	vector<int> userRanks = _userRankingsMap[username];
+	// PART I - normalize
 	double avg = _getAverage(userRanks);
 	for(auto &element : userRanks)
 	{
@@ -93,7 +94,11 @@ string RecommenderSystem::recommendByContent(const string &username)
 			element -= avg;
 		}
 	}
+	//PART II - get preference vector
 	vector<int> prefVec = generatePrefVec(userRanks);
+	// PART III - find the best fitted movie
+	return findResemblance(prefVec,userRanks);
+
 }
 
 double RecommenderSystem::_getAverage(const vector<int> &vec)
@@ -138,6 +143,53 @@ void RecommenderSystem::_addUpVects(vector<int> &vec, const vector<int> &other)
 	{
 		vec[i]+=other[i];
 	}
+}
+
+int RecommenderSystem::dotProduct(vector<int> &vec1, const vector<int> &vec2)
+{
+	int product = 0;
+	for(size_t i=0;i<vec1.size();i++)
+	{
+		product+=vec1[i]*vec2[i];
+	}
+	return product;
+
+}
+
+double RecommenderSystem::norm(vector<int> &vec)
+{
+	double normSquared = 0;
+	for(auto &element : vec)
+	{
+		normSquared+=element*element;
+	}
+	return sqrt(normSquared);
+}
+
+double RecommenderSystem::compAngle(vector<int> &vec1, vector<int> &vec2)
+{
+	return (dotProduct(vec1,vec2)/(norm(vec1) * norm(vec2)));
+}
+
+string RecommenderSystem::findResemblance(vector<int> &prefVec, vector<int> &userRanks)
+{
+	double maxTheta =0;
+	string bestFitMovie = " ";
+	for(vector<int>::size_type i=0;i!=userRanks.size();i++)
+	{
+		if(userRanks[i]==NA)
+		{
+			string movieName = _movieNamesVec[i];
+			vector<int> movieTraits = _movieTraitsMap[movieName];
+			double theta = compAngle(prefVec,movieTraits);
+			if(theta>maxTheta)
+			{
+				maxTheta=theta;
+				bestFitMovie = movieName;
+			}
+		}
+	}
+	return bestFitMovie;
 }
 
 
