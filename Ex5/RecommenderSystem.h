@@ -43,13 +43,12 @@ public:
 	 */
 	static bool loadData(const string &moviesAttributesFilePath, const string &userRanksFilePath);
 
-
 	/**
 	 *generates a recommendation based on the content
-	 * @param username - customer's user name
+	 * @param userName - customer's user name
 	 * @return string - representing the recommended movie returned by the algorithm
 	 */
-	string recommendByContent(const string &username);
+	string recommendByContent(const string &userName);
 
 	/**
 	 * generates a prediction for a user's rank to a movie he hasn't seen yet, based
@@ -59,7 +58,7 @@ public:
 	 * @param k - number of movies that are most similar to movieName
 	 * @return -1 if no such user or movie, float predicted rating otherwize
 	 */
-	double predictMovieScoreForUser(string &movieName, string &userName, int k);
+	double predictMovieScoreForUser(const string &movieName, const string &userName, int k);
 
 	/**
 	 * recommends a movie to the user based on the predictMovieScoreForUser algorithm
@@ -67,15 +66,15 @@ public:
 	 * @param k - number of movies that are most similar to movieName
 	 * @return string representing the name of the recommended movie
 	 */
-	string recommendByCF(string userName, int k);
+	string recommendByCF(const string &userName, int k);
 
 
 private:
 
 	inline static vector<string> _movieNames;
-	inline static std::map<string, vector<int>> _movieTraitsMap; // movieName:traits vec(scary,
+	inline static std::map<string, vector<double>> _movieTraitsMap; // movieName:traits vec(scary,
 	// funny etc..)
-	inline static std::map<string, vector<int>> _userRankingsMap;
+	inline static std::map<string, vector<double>> _userRankingsMap;
 	// userName:vector of (movie:rank) pairs
 
 	/**
@@ -91,7 +90,7 @@ private:
 	 * @param line some line to parse
 	 * @param vec vector of ints to insert line values to
 	 */
-	static void _parseEachLine(const string &line, vector<int> &vec);
+	static void _parseEachLine(const string &line, vector<double> &vec);
 
 	/**
 	 * parses each line, skipping spaces and inserting the values to provided vector
@@ -112,19 +111,19 @@ private:
 	 * @param vec some vector of numbers
 	 * @return
 	 */
-	static double _getAverage(const vector<int> &vec);
+	static double _getAverage(const vector<double> &vec);
 
-	static vector<int> generatePrefVec(const vector<int> &normVec);
+	static vector<double> generatePrefVec(const vector<double> &normVec);
 
 	/**
 	 * multiplies each element of vec by val(some const)
 	 */
-	static void _multByConst(int val, vector<int> &vec);
+	static void _multByConst(double val, vector<double> &vec);
 
 	/**
 	 * adds other vec to vec (same size vectors)
 	 */
-	static void _addUpVects(vector<int> &vec, const vector<int> &other);
+	static void _addUpVects(vector<double> &vec, const vector<double> &other);
 
 	/**
 	 * computes dot product of two vectors of same length
@@ -132,14 +131,14 @@ private:
 	 * @param vec2
 	 * @return dot product v1*v2
 	 */
-	static int dotProduct(vector<int> &vec1, const vector<int> &vec2);
+	static double dotProduct(vector<double> &vec1, const vector<double> &vec2);
 
 	/**
 	 * calculates a norma of vector: sqrt(v[i]^2+...+v[n]^2)
 	 * @param vec some vector
 	 * @return norma
 	 */
-	static double norm(vector<int> &vec);
+	static double norm(vector<double> &vec);
 
 	/**
 	 * calculate the similarity between two vectors, (the argument of arccos)
@@ -147,7 +146,7 @@ private:
 	 * @param vec2
 	 * @return some 0<=value<=1, where 0 means no similarity and 1 means best similarity
 	 */
-	static double compAngle(vector<int> &vec1, vector<int> &vec2);
+	static double compAngle(vector<double> &vec1, vector<double> &vec2);
 
 	/**
 	 * for each movie a user hasent watched, calculates similarity, and extracts the movie
@@ -156,15 +155,48 @@ private:
 	 * @param userRanks - the ranks a user has given to all movies (NA for which he hasnt watched)
 	 * @return name of the movie with the biggest resemblance
 	 */
-	static string findResemblance(vector<int> &prefVec, vector<int> &userRanks);
+	static string findResemblance(vector<double> &prefVec, vector<double> &userRanks);
 
-	static vector<string> didWatch(string &username);
+	/**
+	 * finds our which movie a username has watched (by ignoring NA values)
+	 * @param username some customer
+	 * @return vector of string representing movies the username have seen
+	 */
+	static vector<std::pair<string, double>> didWatch(string &username);
 
+	/**
+	 * finds our which movie a username has not watched (all NA values)
+	 * @param username some customer
+	 * @return vector of string representing movies the username did watch
+	 */
 	static vector<string> didNotWatch(string &username);
 
-	static double forecastRating(vector<std::pair<string,double>> &dataVec,int k);
+	/**
+	 * forcasts a user rating for some movie using the algorithm provided.
+	 * @param dataVec - vector of pairs <movieName:resemblance>
+	 * @param k # of movies that are most similar
+	 * @return focasted rating of movieName
+	 */
+	static double
+	forecastRating(vector<std::pair<std::pair<string, double>, double> > &dataVec, string &userName,
+				   int k);
 
+	/**
+	 * a helper function for built in sort, to sort by second element of pair in descending order
+	 * @param a some pair
+	 * @param b yet another pair
+	 * @return boolean value
+	 */
+	static bool sortBySecond(const std::pair<std::pair<string, double>, double> &a,
+							 const std::pair<std::pair<string, double>, double> &b);
 
+	/**
+	 * iterates over a vector of pairs, find the largest resemblance (Vec.second)
+	 * and returns the corresponding movie name (vec.first)
+	 * @param data some vector with pairs elements (moviename:resemblance)
+	 * @return movie with the max resemblance
+	 */
+	static string getMovieWithMaxResemblance(vector<std::pair<string, double>> &data);
 
 };
 

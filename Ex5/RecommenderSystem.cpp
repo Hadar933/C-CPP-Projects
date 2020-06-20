@@ -1,6 +1,6 @@
 
 #include "RecommenderSystem.h"
-
+// TODO - convert all ints to double if possible
 bool gFirstLine = true;
 
 // --------------------------------- PARSING FILES ----------------------------------------------//
@@ -21,7 +21,7 @@ void RecommenderSystem::_parseStringLine(const string &line, vector<string> &vec
 }
 
 
-void RecommenderSystem::_parseEachLine(const string &line, vector<int> &vec)
+void RecommenderSystem::_parseEachLine(const string &line, vector<double> &vec)
 {
 	std::istringstream iss(line);
 	do
@@ -50,6 +50,7 @@ bool RecommenderSystem::_parseFile(const string &filePath, bool isUserRankFile)
 	file.open(filePath);
 	if (!file.good())
 	{
+		std::cout<<BAD_PATH<<filePath<<std::endl;
 		return INVALID;
 	}
 	string line;
@@ -63,7 +64,7 @@ bool RecommenderSystem::_parseFile(const string &filePath, bool isUserRankFile)
 		else
 		{ // each of the following lines will be added as key:value
 			string key = _popFirstWord(line); //movieName of userName
-			vector<int> tempVec;
+			vector<double> tempVec;
 			_parseEachLine(line, tempVec);
 			isUserRankFile ? _userRankingsMap[key] = tempVec : _movieTraitsMap[key] = tempVec;
 		}
@@ -85,10 +86,13 @@ RecommenderSystem::loadData(const string &moviesAttributesFilePath, const string
 
 //-------------------------------recommend by content--------------------------------------------//
 
-string RecommenderSystem::recommendByContent(const string &username)
+string RecommenderSystem::recommendByContent(const string &userName)
 {
-	//TODO if username not found - return USER NOT FOUND
-	vector<int> userRanks = _userRankingsMap[username];
+	if(_userRankingsMap.find(userName) == _userRankingsMap.end())
+	{
+		return BAD_USER;
+	}
+	vector<double> userRanks = _userRankingsMap[userName];
 	// PART I - normalize
 	double avg = _getAverage(userRanks);
 	for (auto &element : userRanks)
@@ -99,16 +103,16 @@ string RecommenderSystem::recommendByContent(const string &username)
 		}
 	}
 	//PART II - get preference vector
-	vector<int> prefVec = generatePrefVec(userRanks);
+	vector<double > prefVec = generatePrefVec(userRanks);
 	// PART III - find the best fitted movie
 	return findResemblance(prefVec, userRanks);
 
 }
 
-double RecommenderSystem::_getAverage(const vector<int> &vec)
+double RecommenderSystem::_getAverage(const vector<double> &vec)
 {
 	double sum = std::accumulate(vec.begin(), vec.end(), START);
-	int size = 0;
+	double size = 0;
 	for (auto &element : vec)
 	{ // get size by ignoring NA values
 		if (element != 0)
@@ -119,30 +123,30 @@ double RecommenderSystem::_getAverage(const vector<int> &vec)
 	return sum / size;
 }
 
-vector<int> RecommenderSystem::generatePrefVec(const vector<int> &normVec)
+vector<double> RecommenderSystem::generatePrefVec(const vector<double> &normVec)
 {
-	vector<int> resVec(normVec.size() - 1);
-	for (vector<int>::size_type i = 0; i != normVec.size(); i++)
+	vector<double> resVec(normVec.size() - 1);
+	for (vector<double>::size_type i = 0; i != normVec.size(); i++)
 	{
-		int weight = normVec[i];
+		double weight = normVec[i];
 		string movieName = _movieNames[i];
-		vector<int> tempVec = _movieTraitsMap[movieName];
+		vector<double> tempVec = _movieTraitsMap[movieName];
 		_multByConst(weight, tempVec);
 		_addUpVects(resVec, tempVec);
 	}
 	return resVec;
 }
 
-string RecommenderSystem::findResemblance(vector<int> &prefVec, vector<int> &userRanks)
+string RecommenderSystem::findResemblance(vector<double> &prefVec, vector<double> &userRanks)
 {
 	double maxTheta = 0;
 	string bestFitMovie = " ";
-	for (vector<int>::size_type i = 0; i != userRanks.size(); i++)
+	for (vector<double>::size_type i = 0; i != userRanks.size(); i++)
 	{
 		if (userRanks[i] == NA)
 		{
 			string movieName = _movieNames[i];
-			vector<int> movieTraits = _movieTraitsMap[movieName];
+			vector<double> movieTraits = _movieTraitsMap[movieName];
 			double theta = compAngle(prefVec, movieTraits);
 			if (theta > maxTheta)
 			{
@@ -156,48 +160,77 @@ string RecommenderSystem::findResemblance(vector<int> &prefVec, vector<int> &use
 
 //-------------------------------predict movie score for user -----------------------------------//
 
-double RecommenderSystem::predictMovieScoreForUser(string &movieName, string &userName, int k)
+double RecommenderSystem::predictMovieScoreForUser(const string &movieName, const string &userName,
+												   int k)
 {
 	if (std::find(_movieNames.begin(), _movieNames.end(), movieName) == _movieNames.end() ||
 		_userRankingsMap.find(userName) == _userRankingsMap.end())
 	{ // no such movie or no such user name
 		return INVALID;
 	}
-	vector< std::pair< string,double> > movieResem;
-	vector<string> watched = didWatch(userName);
-	vector<int> watchedMovieTraits = _movieTraitsMap[movieName];
+	vector<std::pair<std::pair<string, double>, double> > movieResem; // ((movie:index):resemb
+	vector<std::pair<string, double>> watched = didWatch(const_cast<string &>(userName));
+	vector<double> watchedMovieTraits = _movieTraitsMap[movieName];
 	// iterate over all watched movies and find resemblance to movieName
 	for (auto &movie : watched)
 	{
-		vector<int>  currMovieTraits = _movieTraitsMap[movie];
-		double resemblance = compAngle(watchedMovieTraits,currMovieTraits);
+		vector<double> currMovieTraits = _movieTraitsMap[movie.first];
+		double resemblance = compAngle(watchedMovieTraits, currMovieTraits);
 		movieResem.emplace_back(movie, resemblance);
 	}
-	forecastRating(movieResem,k);
+	return forecastRating(movieResem, const_cast<string &>(userName), k);
 
 
 }
-double RecommenderSystem::forecastRating(vector<std::pair<string,double>> &dataVec, int k)
+
+bool RecommenderSystem::sortBySecond(const std::pair<std::pair<string, double>, double> &a,
+									 const std::pair<std::pair<string, double>, double> &b)
 {
-	//TODO - after finding all resemblances to some movieName in the prev function,
-	// we've added it all to a vector of pairs <moviename,resemblance>. the next thing that
-	// needs to be done is to sort it and iterate over k elements accurding to the sum alrogithm
-	// provided on page 6 (stage 2)
-
+	return a.second > b.second;
 }
 
+double
+RecommenderSystem::forecastRating(vector<std::pair<std::pair<string, double>, double> > &dataVec,
+								  string &userName, int k)
+{
+	sort(dataVec.begin(), dataVec.end(), sortBySecond); //sorting data vec according to second
+	// value of pair
 
+	double numerator = 0; // sum_(j=0 to k) [ s_(mj) * r_(xj) ]
+	double denominator = 0;// sum_(j=0 to k) [ s_(mj) ]
+	for (int j = 0; j < k; j++) // we can assume k < size of vector
+	{
+		double resemblance = dataVec[j].second;
+		string movieName = dataVec[j].first.first;
+		int indexOfMovie = dataVec[j].first.second;
+		double specificRating = _userRankingsMap[userName].at(indexOfMovie);
+		denominator += resemblance;
+		numerator += dataVec[j].second * specificRating;
+	}
+	return numerator/denominator;
+}
 
+//-------------------------------------recommend by cf-------------------------------------------//
 
+string RecommenderSystem::recommendByCF(const string &userName, int k)
+{
+	if(_userRankingsMap.find(userName) == _userRankingsMap.end())
+	{
+		return BAD_USER;
+	}
+	vector<std::pair<string,double>> results;
+	for(auto& movie: didNotWatch(const_cast<string &>(userName)))
+	{
+		double resemb = predictMovieScoreForUser(movie,userName,k);
+		results.emplace_back(movie,resemb);
+	}
+	return getMovieWithMaxResemblance(results);
 
-
-
-
-
+}
 
 //----------------------------------utility methods----------------------------------------------//
 
-void RecommenderSystem::_multByConst(int val, vector<int> &vec)
+void RecommenderSystem::_multByConst(double val, vector<double> &vec)
 {
 	for (auto &element : vec)
 	{
@@ -205,7 +238,7 @@ void RecommenderSystem::_multByConst(int val, vector<int> &vec)
 	}
 }
 
-void RecommenderSystem::_addUpVects(vector<int> &vec, const vector<int> &other)
+void RecommenderSystem::_addUpVects(vector<double> &vec, const vector<double> &other)
 {
 	for (size_t i = 0; i < vec.size(); i++)
 	{
@@ -213,9 +246,9 @@ void RecommenderSystem::_addUpVects(vector<int> &vec, const vector<int> &other)
 	}
 }
 
-int RecommenderSystem::dotProduct(vector<int> &vec1, const vector<int> &vec2)
+double RecommenderSystem::dotProduct(vector<double> &vec1, const vector<double> &vec2)
 {
-	int product = 0;
+	double product = 0;
 	for (size_t i = 0; i < vec1.size(); i++)
 	{
 		product += vec1[i] * vec2[i];
@@ -224,7 +257,7 @@ int RecommenderSystem::dotProduct(vector<int> &vec1, const vector<int> &vec2)
 
 }
 
-double RecommenderSystem::norm(vector<int> &vec)
+double RecommenderSystem::norm(vector<double> &vec)
 {
 	double normSquared = 0;
 	for (auto &element : vec)
@@ -234,21 +267,22 @@ double RecommenderSystem::norm(vector<int> &vec)
 	return sqrt(normSquared);
 }
 
-double RecommenderSystem::compAngle(vector<int> &vec1, vector<int> &vec2)
+double RecommenderSystem::compAngle(vector<double> &vec1, vector<double> &vec2)
 {
 	return (dotProduct(vec1, vec2) / (norm(vec1) * norm(vec2)));
 }
 
-vector<string> RecommenderSystem::didWatch(string &username)
+vector<std::pair<string, double>> RecommenderSystem::didWatch(string &username)
 {
-	vector<string> didWatch;
-	vector<int> userRanks = _userRankingsMap[username];
+	vector<std::pair<string, double>> didWatch;
+	vector<double> userRanks = _userRankingsMap[username];
 	for (size_t i = 0; i < userRanks.size(); i++)
 	{
 		if (userRanks[i] != 0)
 		{
 			string movieName = _movieNames[i];
-			didWatch.push_back(movieName);
+			didWatch.emplace_back(movieName, i); // saving the movie name and the index in movie
+			// names for future reach
 		}
 	}
 	return didWatch;
@@ -257,27 +291,43 @@ vector<string> RecommenderSystem::didWatch(string &username)
 
 vector<string> RecommenderSystem::didNotWatch(string &username)
 {
-	vector<string> didNotWatch;
-	vector<int> userRanks = _userRankingsMap[username];
+	vector<string> didntWatch;
+	vector<double> userRanks = _userRankingsMap[username];
 	for (size_t i = 0; i < userRanks.size(); i++)
 	{
 		if (userRanks[i] == 0)
 		{
 			string movieName = _movieNames[i];
-			didNotWatch.push_back(movieName);
+			didntWatch.push_back(movieName);
 		}
 	}
-	return didNotWatch;
+	return didntWatch;
 }
 
-
+string RecommenderSystem::getMovieWithMaxResemblance(vector<std::pair<string, double>> &data)
+{
+	double maxResemb = 0;
+	string outputMovie = " ";
+	for(auto &pair: data)
+	{
+		if(pair.second > maxResemb)
+		{
+			maxResemb = pair.second;
+			outputMovie = pair.first;
+		}
+	}
+	return outputMovie;
+}
 
 
 int main()
 {
+	string moviePath = "movies_features.txt";
+	string ranksPath = "ranks_matrix.txt";
 	RecommenderSystem obj;
-	obj.loadData("movies_features.txt", "ranks_matrix.txt");
-	obj.recommendByContent("Sofia");
-
+	obj.loadData(moviePath,ranksPath);
+	std::cout<<obj.recommendByContent("Sofia")<<std::endl;
+	std::cout<<obj.predictMovieScoreForUser("Twilight","Nicole",2)<<std::endl;
+	std::cout<<obj.predictMovieScoreForUser("Titanic","Nicole",2)<<std::endl;
 
 }
