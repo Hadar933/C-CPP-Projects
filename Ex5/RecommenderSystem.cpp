@@ -329,5 +329,6 @@ int main()
 	std::cout<<obj.recommendByContent("Sofia")<<std::endl;
 	std::cout<<obj.predictMovieScoreForUser("Twilight","Nicole",2)<<std::endl;
 	std::cout<<obj.predictMovieScoreForUser("Titanic","Nicole",2)<<std::endl;
+	std::cout<<obj.recommendByCF("Nicole",2)<<std::endl;
 
 }
