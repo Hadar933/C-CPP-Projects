@@ -14,6 +14,7 @@
 #include <numeric>
 #include <algorithm>
 #include <cmath>
+#include <float.h>
 
 #define SUCCESS 0
 #define FAILURE 1
@@ -22,6 +23,8 @@
 #define BAD_USER "USER NOT FOUND"
 #define NA 0
 #define START 0
+#define DOUBLE_INDICATOR (0.0)
+
 
 using std::string;
 using std::cerr;
@@ -41,7 +44,7 @@ public:
 	 * @param userRanksFilePath - filepath to user ranks matrix
 	 * @return 0 upon success, 1 otherwise.
 	 */
-	static bool loadData(const string &moviesAttributesFilePath, const string &userRanksFilePath);
+	bool loadData(const string &moviesAttributesFilePath, const string &userRanksFilePath);
 
 	/**
 	 *generates a recommendation based on the content
@@ -71,10 +74,10 @@ public:
 
 private:
 
-	inline static vector<string> _movieNames;
-	inline static std::map<string, vector<double>> _movieTraitsMap; // movieName:traits vec(scary,
+	vector<string> _movieNames;
+	std::map<string, vector<double>> _movieTraitsMap; // movieName:traits vec(scary,
 	// funny etc..)
-	inline static std::map<string, vector<double>> _userRankingsMap;
+	std::map<string, vector<double>> _userRankingsMap;
 	// userName:vector of (movie:rank) pairs
 
 	/**
@@ -83,7 +86,7 @@ private:
 	 * @param isUserRankFile - represents that the file is the user ranks
 	 * @return
 	 */
-	static bool _parseFile(const string &filePath, bool isUserRankFile);
+	bool _parseFile(const string &filePath, bool isUserRankFile);
 
 	/**
 	 * parses each line, skipping spaces and inserting the values to provided vector
@@ -113,7 +116,7 @@ private:
 	 */
 	static double _getAverage(const vector<double> &vec);
 
-	static vector<double> generatePrefVec(const vector<double> &normVec);
+	vector<double> generatePrefVec(const vector<double> &normVec);
 
 	/**
 	 * multiplies each element of vec by val(some const)
@@ -131,7 +134,7 @@ private:
 	 * @param vec2
 	 * @return dot product v1*v2
 	 */
-	static double dotProduct(vector<double> &vec1, const vector<double> &vec2);
+	static double dotProduct(const vector<double> &vec1, const vector<double> &vec2);
 
 	/**
 	 * calculates a norma of vector: sqrt(v[i]^2+...+v[n]^2)
@@ -155,21 +158,21 @@ private:
 	 * @param userRanks - the ranks a user has given to all movies (NA for which he hasnt watched)
 	 * @return name of the movie with the biggest resemblance
 	 */
-	static string findResemblance(vector<double> &prefVec, vector<double> &userRanks);
+	string findResemblance(vector<double> &prefVec, vector<double> &userRanks);
 
 	/**
 	 * finds our which movie a username has watched (by ignoring NA values)
 	 * @param username some customer
 	 * @return vector of string representing movies the username have seen
 	 */
-	static vector<std::pair<string, double>> didWatch(string &username);
+	vector<std::pair<string, double>> didWatch(string &username);
 
 	/**
 	 * finds our which movie a username has not watched (all NA values)
 	 * @param username some customer
 	 * @return vector of string representing movies the username did watch
 	 */
-	static vector<string> didNotWatch(string &username);
+	vector<string> didNotWatch(string &username);
 
 	/**
 	 * forcasts a user rating for some movie using the algorithm provided.
@@ -177,7 +180,7 @@ private:
 	 * @param k # of movies that are most similar
 	 * @return focasted rating of movieName
 	 */
-	static double
+	double
 	forecastRating(vector<std::pair<std::pair<string, double>, double> > &dataVec, string &userName,
 				   int k);
 

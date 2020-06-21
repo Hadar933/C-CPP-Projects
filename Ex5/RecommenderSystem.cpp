@@ -1,6 +1,6 @@
 
 #include "RecommenderSystem.h"
-// TODO - convert all ints to double if possible
+
 bool gFirstLine = true;
 
 // --------------------------------- PARSING FILES ----------------------------------------------//
@@ -50,7 +50,8 @@ bool RecommenderSystem::_parseFile(const string &filePath, bool isUserRankFile)
 	file.open(filePath);
 	if (!file.good())
 	{
-		std::cout<<BAD_PATH<<filePath<<std::endl;
+		std::cout << BAD_PATH << filePath << std::endl;
+		file.close();
 		return INVALID;
 	}
 	string line;
@@ -67,8 +68,10 @@ bool RecommenderSystem::_parseFile(const string &filePath, bool isUserRankFile)
 			vector<double> tempVec;
 			_parseEachLine(line, tempVec);
 			isUserRankFile ? _userRankingsMap[key] = tempVec : _movieTraitsMap[key] = tempVec;
+
 		}
 	}
+	gFirstLine = true;
 	return SUCCESS;
 }
 
@@ -88,7 +91,7 @@ RecommenderSystem::loadData(const string &moviesAttributesFilePath, const string
 
 string RecommenderSystem::recommendByContent(const string &userName)
 {
-	if(_userRankingsMap.find(userName) == _userRankingsMap.end())
+	if (_userRankingsMap.find(userName) == _userRankingsMap.end())
 	{
 		return BAD_USER;
 	}
@@ -103,15 +106,14 @@ string RecommenderSystem::recommendByContent(const string &userName)
 		}
 	}
 	//PART II - get preference vector
-	vector<double > prefVec = generatePrefVec(userRanks);
+	vector<double> prefVec = generatePrefVec(userRanks);
 	// PART III - find the best fitted movie
 	return findResemblance(prefVec, userRanks);
-
 }
 
 double RecommenderSystem::_getAverage(const vector<double> &vec)
 {
-	double sum = std::accumulate(vec.begin(), vec.end(), START);
+	double sum = std::accumulate(vec.begin(), vec.end(), DOUBLE_INDICATOR);
 	double size = 0;
 	for (auto &element : vec)
 	{ // get size by ignoring NA values
@@ -125,24 +127,28 @@ double RecommenderSystem::_getAverage(const vector<double> &vec)
 
 vector<double> RecommenderSystem::generatePrefVec(const vector<double> &normVec)
 {
-	vector<double> resVec(normVec.size() - 1);
+	int size = _movieTraitsMap[_movieNames[START]].size();
+	vector<double> resVec(size);
 	for (vector<double>::size_type i = 0; i != normVec.size(); i++)
 	{
 		double weight = normVec[i];
-		string movieName = _movieNames[i];
-		vector<double> tempVec = _movieTraitsMap[movieName];
-		_multByConst(weight, tempVec);
-		_addUpVects(resVec, tempVec);
+		if (weight != 0)
+		{
+			string movieName = _movieNames[i];
+			vector<double> tempVec = _movieTraitsMap[movieName];
+			_multByConst(weight, tempVec);
+			_addUpVects(resVec, tempVec);
+		}
 	}
 	return resVec;
 }
 
 string RecommenderSystem::findResemblance(vector<double> &prefVec, vector<double> &userRanks)
 {
-	double maxTheta = 0;
+	double maxTheta = -DBL_MAX;
 	string bestFitMovie = " ";
 	for (vector<double>::size_type i = 0; i != userRanks.size(); i++)
-	{
+	{// TODO whitehead is replaced with americansniper though it shouldnt (iteration ~120)
 		if (userRanks[i] == NA)
 		{
 			string movieName = _movieNames[i];
@@ -207,25 +213,24 @@ RecommenderSystem::forecastRating(vector<std::pair<std::pair<string, double>, do
 		denominator += resemblance;
 		numerator += dataVec[j].second * specificRating;
 	}
-	return numerator/denominator;
+	return numerator / denominator;
 }
 
 //-------------------------------------recommend by cf-------------------------------------------//
 
 string RecommenderSystem::recommendByCF(const string &userName, int k)
 {
-	if(_userRankingsMap.find(userName) == _userRankingsMap.end())
+	if (_userRankingsMap.find(userName) == _userRankingsMap.end())
 	{
 		return BAD_USER;
 	}
-	vector<std::pair<string,double>> results;
-	for(auto& movie: didNotWatch(const_cast<string &>(userName)))
+	vector<std::pair<string, double>> results;
+	for (auto &movie: didNotWatch(const_cast<string &>(userName)))
 	{
-		double resemb = predictMovieScoreForUser(movie,userName,k);
-		results.emplace_back(movie,resemb);
+		double resemb = predictMovieScoreForUser(movie, userName, k);
+		results.emplace_back(movie, resemb);
 	}
 	return getMovieWithMaxResemblance(results);
-
 }
 
 //----------------------------------utility methods----------------------------------------------//
@@ -246,15 +251,14 @@ void RecommenderSystem::_addUpVects(vector<double> &vec, const vector<double> &o
 	}
 }
 
-double RecommenderSystem::dotProduct(vector<double> &vec1, const vector<double> &vec2)
+double RecommenderSystem::dotProduct(const vector<double> &vec1, const vector<double> &vec2)
 {
 	double product = 0;
 	for (size_t i = 0; i < vec1.size(); i++)
 	{
-		product += vec1[i] * vec2[i];
+		product = product + (vec1[i] * vec2[i]);
 	}
 	return product;
-
 }
 
 double RecommenderSystem::norm(vector<double> &vec)
@@ -308,9 +312,9 @@ string RecommenderSystem::getMovieWithMaxResemblance(vector<std::pair<string, do
 {
 	double maxResemb = 0;
 	string outputMovie = " ";
-	for(auto &pair: data)
+	for (auto &pair: data)
 	{
-		if(pair.second > maxResemb)
+		if (pair.second > maxResemb)
 		{
 			maxResemb = pair.second;
 			outputMovie = pair.first;
@@ -322,13 +326,11 @@ string RecommenderSystem::getMovieWithMaxResemblance(vector<std::pair<string, do
 
 int main()
 {
-	string moviePath = "movies_features.txt";
-	string ranksPath = "ranks_matrix.txt";
+	string moviePath = "movies_big.txt";
+	string ranksPath = "ranks_big.txt";
 	RecommenderSystem obj;
-	obj.loadData(moviePath,ranksPath);
-	std::cout<<obj.recommendByContent("Sofia")<<std::endl;
-	std::cout<<obj.predictMovieScoreForUser("Twilight","Nicole",2)<<std::endl;
-	std::cout<<obj.predictMovieScoreForUser("Titanic","Nicole",2)<<std::endl;
-	std::cout<<obj.recommendByCF("Nicole",2)<<std::endl;
+	obj.loadData(moviePath, ranksPath);
+	std::cout << obj.recommendByContent("Molly") << std::endl;
+
 
 }
