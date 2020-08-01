@@ -200,7 +200,7 @@ void fixAfterInsertion(RBTree *tree, Node *node)
 				updateRoot(tree, P);
 				gChainPosition = 1;
 			}
-				//CASE II - (node is left child of P AND P is right child of G) ->rotate node right
+			//CASE II - (node is left child of P AND P is right child of G) ->rotate node right
 			else if (isLeftChild(node) && isRightChild(P))
 			{
 				rightRotation(tree, P);
