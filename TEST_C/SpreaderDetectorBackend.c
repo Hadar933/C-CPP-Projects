@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define NO_SUCH_ITEM -1
 #define MAX_LINE_LEN 1024
 #define ALLOC_SIZE 10
 #define END_FILE 0
@@ -186,37 +187,76 @@ Edge *readMeetingFile(char const *const meetingFileName)
 	return meetingArray;
 }
 
-float getInfectionChance(Node person)
+/**
+ * compare function based on person's ID
+ */
+int idCompare(const void *a, const void *b)
 {
-
+	return strcmp(((Node *) a)->ID, ((Node *) b)->ID);
 }
 
-int floatComp(const void* a, const void *b)
+/**
+ * compare function based on floats
+ */
+int floatComp(const void *a, const void *b)
 {
-	if(*(const float*)a < *(const float*)b)
+	if (*(const float *) a < *(const float *) b)
 	{
 		return -1;
 	}
-	return *(const float*)a>*(const float*)b;
+	return *(const float *) a > *(const float *) b;
 }
+
+int binarySearch(Node* peopleArray,int left,int right,const char* personID)
+{
+	if(right>=left)
+	{
+		int middle = left+((right-left)/2);
+		if(strcmp(peopleArray[middle].ID,personID)==0) // found the ID
+		{
+			return middle;
+		}
+		if(strcmp(peopleArray[middle].ID,personID)>0) // current is bigger->search left part
+		{
+			return binarySearch(peopleArray,left,middle-1,personID);
+		}
+		// else, current is smaller -> search right part
+		return binarySearch(peopleArray,middle+1,right,personID);
+	}
+	// if we didnt find:
+	return NO_SUCH_ITEM;
+}
+/**
+ *
+ * @param meeting
+ * @param sortedPeople
+ * @return
+ */
+float getInfectionChance(Edge meeting, Node *sortedPeople)
+{
+	char* id1 = meeting.srcID;
+	char* id2 = meeting.destID;
+}
+
 /**
  * based on the basic provided pseudo-code, for each person in people.in,
  * calculates the chance of infection, sorts the results and outputs value in severity order
  */
-void calcOutput(Node *peopleArray)
+void calcOutput(Edge *meetingArray, Node *peopleArray)
 {
 	float *resultsArray = (float *) malloc(gNumOfPeople * sizeof(float));
-	if(resultsArray==NULL)
+	if (resultsArray == NULL)
 	{
 		fprintf(stderr, STANDARD_LIB_ERR_MSG);
 		exit(EXIT_FAILURE);
 	}
-	for (int i = 0; i < gNumOfPeople; i++)
+	qsort(peopleArray, gNumOfPeople, sizeof(Node), idCompare);
+	for (int i = 0; i < gNumOfMeetings; i++)
 	{
-		float infectionChance = getInfectionChance(peopleArray[i]);
+		float infectionChance = getInfectionChance(meetingArray[i], peopleArray);
 		resultsArray[i] = infectionChance;
 	}
-	qsort(resultsArray,gNumOfPeople,sizeof(float),floatComp);
+	qsort(resultsArray, gNumOfPeople, sizeof(float), floatComp);
 
 }
 
