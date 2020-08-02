@@ -9,7 +9,6 @@
 #define ALLOC_SIZE 10
 #define END_FILE 0
 #define VALID_ARGS 3
-#define INPUT_ERROR "Error in input files.\n"
 
 int gNumOfPeople = 0; //global value representing the number of lines in people.in, which
 // corresponds to nodes in the graph data structure
@@ -124,7 +123,7 @@ Node *readPeopleFile(char const *const peopleFileName)
 		// we are now able to parse the line properly:
 		parsePersonLine(personLine, &peopleArray);
 	}
-
+	fclose(peopleFile);
 	return peopleArray;
 }
 
@@ -148,16 +147,35 @@ void parseMeetingLine(char line[], Edge **meetingArray)
 }
 
 /**
+ * treating the first line in meeting.in differently:
+ * we find the node with the given ID and updates its CRNA to be 1
+ * this costs o(n), because we do not sort the array, and perform the operation only once.
+ * @param spreaderID
+ * @return
+ */
+void updateSpreader(char* spreaderID,Node** peopleArray)
+{
+	for (int i=0;i<gNumOfPeople;i++)
+	{
+		if(strcmp((*peopleArray)[i].ID,spreaderID)==0) //found the person with the spreaderID
+		{
+			(*peopleArray)[i].crna=1;
+		}
+	}
+}
+
+/**
  * given a name to meeting.in file, reads its data and stores it for later use.
  * @param meetingFileName - meeting.in file
  */
-Edge *readMeetingFile(char const *const meetingFileName)
+Edge *readMeetingFile(char const *const meetingFileName, Node** peopleArray)
 {
 	// Memory Allocation:
 	int size = ALLOC_SIZE;
 	Edge *meetingArray = (Edge *) malloc(size * sizeof(Edge)); //all data in meeting.in
 	if (meetingArray == NULL) // allocation failed
-	{
+	{//TODO: this part might need fixes - make sure everything is being closed properly
+		free(peopleArray);
 		fprintf(stderr, STANDARD_LIB_ERR_MSG);
 		exit(EXIT_FAILURE);
 	}
@@ -175,7 +193,7 @@ Edge *readMeetingFile(char const *const meetingFileName)
 	char meetingLine[MAX_LINE_LEN];
 	fgets(meetingLine, (int) sizeof(meetingLine), meetingFile); // first line - Spreader
 	char *spreaderID = meetingLine;
-
+	updateSpreader(spreaderID,peopleArray);
 	while (fgets(meetingLine, (int) sizeof(meetingLine), meetingFile)) // each line is some meeting
 	{
 		if (size == gNumOfMeetings) // this means we don't have enough space to allocate
@@ -183,14 +201,13 @@ Edge *readMeetingFile(char const *const meetingFileName)
 			size += ALLOC_SIZE;
 			meetingArray = (Edge *) realloc(meetingArray, size * sizeof(Edge));
 			if (meetingArray == NULL) //reallocation failed
-			{
+			{//TODO: this part might need fixes - make sure everything is being closed properly
 				meetingExitProtocol(&meetingFile, &meetingArray);
 			}
 		}
 		// we are now able to parse the line properly:
 		parseMeetingLine(meetingLine, &meetingArray);
 	}
-
 	return meetingArray;
 }
 
@@ -247,7 +264,6 @@ float calcCrna(float dist,float time)
 	return ((time*MIN_DISTANCE)/(dist*MAX_TIME));
 }
 /**
- *
  * @param meeting
  * @param sortedPeople
  * @return
@@ -258,7 +274,6 @@ void updateInfectionData(Edge meeting, Node *sortedPeople)
 	char *destID = meeting.destID;
 	int idxOfDest = binarySearch(sortedPeople,START_IDX,gNumOfPeople,destID);
 	sortedPeople[idxOfDest].crna=crna;
-
 }
 
 /**
@@ -281,7 +296,7 @@ void calcOutput(Edge *meetingArray, Node *peopleArray)
 		updateInfectionData(meetingArray[i], peopleArray);
 	}
 	qsort(resultsArray, gNumOfPeople, sizeof(float), floatComp);
-
+	//TODO: finished here, not sure if I need to multiply the crna, or its fine the way it is.
 }
 
 int main(int argc, char *argv[])
@@ -303,13 +318,13 @@ int main(int argc, char *argv[])
 //					.ID, peopleArray[i].age, peopleArray[i].crna);
 //		}
 //		printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
-		Edge *meetingArray = readMeetingFile(meetingPath);
+		Edge *meetingArray = readMeetingFile(meetingPath,&peopleArray);
 //		for (int i = 0; i < gNumOfMeetings; i++)
 //		{
 //			printf("src = %s, dest = %s, dist = %f, time= %f\n", meetingArray[i].srcID,
 //				   meetingArray[i].destID, meetingArray[i].dist, meetingArray[i].time);
 //		}
-
+		calcOutput(meetingArray,peopleArray);
 
 
 
