@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/SpreaderDetectorBackend.c
+stdio.h
+-
+SpreaderDetectorParams.h
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/SpreaderDetectorParams.h
+stdlib.h
+-
+string.h
+-
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/SpreaderDetectorParams.h
+
