@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/main.c" "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/cmake-build-debug/CMakeFiles/TEST_C.dir/main.c.o"
+  "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/SpreaderDetectorBackend.c" "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/cmake-build-debug/CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

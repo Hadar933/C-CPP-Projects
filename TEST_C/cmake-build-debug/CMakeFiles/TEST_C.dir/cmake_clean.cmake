@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/TEST_C.dir/main.c.o"
+  "CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.o"
   "TEST_C.exe"
   "TEST_C.pdb"
   "libTEST_C.dll.a"

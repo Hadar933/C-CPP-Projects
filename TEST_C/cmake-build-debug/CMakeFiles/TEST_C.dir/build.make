@@ -57,27 +57,27 @@ include CMakeFiles/TEST_C.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/TEST_C.dir/flags.make
 
-CMakeFiles/TEST_C.dir/main.c.o: CMakeFiles/TEST_C.dir/flags.make
-CMakeFiles/TEST_C.dir/main.c.o: ../main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/TEST_C.dir/main.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/TEST_C.dir/main.c.o   -c "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/main.c"
+CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.o: CMakeFiles/TEST_C.dir/flags.make
+CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.o: ../SpreaderDetectorBackend.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.o   -c "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/SpreaderDetectorBackend.c"
 
-CMakeFiles/TEST_C.dir/main.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/TEST_C.dir/main.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/main.c" > CMakeFiles/TEST_C.dir/main.c.i
+CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/SpreaderDetectorBackend.c" > CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.i
 
-CMakeFiles/TEST_C.dir/main.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/TEST_C.dir/main.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/main.c" -o CMakeFiles/TEST_C.dir/main.c.s
+CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/SpreaderDetectorBackend.c" -o CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.s
 
 # Object files for target TEST_C
 TEST_C_OBJECTS = \
-"CMakeFiles/TEST_C.dir/main.c.o"
+"CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.o"
 
 # External object files for target TEST_C
 TEST_C_EXTERNAL_OBJECTS =
 
-TEST_C.exe: CMakeFiles/TEST_C.dir/main.c.o
+TEST_C.exe: CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.o
 TEST_C.exe: CMakeFiles/TEST_C.dir/build.make
 TEST_C.exe: CMakeFiles/TEST_C.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_C/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable TEST_C.exe"

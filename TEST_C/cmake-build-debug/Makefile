@@ -123,32 +123,32 @@ TEST_C/fast:
 	$(MAKE) -f CMakeFiles/TEST_C.dir/build.make CMakeFiles/TEST_C.dir/build
 .PHONY : TEST_C/fast
 
-main.o: main.c.o
+SpreaderDetectorBackend.o: SpreaderDetectorBackend.c.o
 
-.PHONY : main.o
+.PHONY : SpreaderDetectorBackend.o
 
 # target to build an object file
-main.c.o:
-	$(MAKE) -f CMakeFiles/TEST_C.dir/build.make CMakeFiles/TEST_C.dir/main.c.o
-.PHONY : main.c.o
+SpreaderDetectorBackend.c.o:
+	$(MAKE) -f CMakeFiles/TEST_C.dir/build.make CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.o
+.PHONY : SpreaderDetectorBackend.c.o
 
-main.i: main.c.i
+SpreaderDetectorBackend.i: SpreaderDetectorBackend.c.i
 
-.PHONY : main.i
+.PHONY : SpreaderDetectorBackend.i
 
 # target to preprocess a source file
-main.c.i:
-	$(MAKE) -f CMakeFiles/TEST_C.dir/build.make CMakeFiles/TEST_C.dir/main.c.i
-.PHONY : main.c.i
+SpreaderDetectorBackend.c.i:
+	$(MAKE) -f CMakeFiles/TEST_C.dir/build.make CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.i
+.PHONY : SpreaderDetectorBackend.c.i
 
-main.s: main.c.s
+SpreaderDetectorBackend.s: SpreaderDetectorBackend.c.s
 
-.PHONY : main.s
+.PHONY : SpreaderDetectorBackend.s
 
 # target to generate assembly for a file
-main.c.s:
-	$(MAKE) -f CMakeFiles/TEST_C.dir/build.make CMakeFiles/TEST_C.dir/main.c.s
-.PHONY : main.c.s
+SpreaderDetectorBackend.c.s:
+	$(MAKE) -f CMakeFiles/TEST_C.dir/build.make CMakeFiles/TEST_C.dir/SpreaderDetectorBackend.c.s
+.PHONY : SpreaderDetectorBackend.c.s
 
 # Help Target
 help:
@@ -159,9 +159,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... TEST_C"
 	@echo "... edit_cache"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... SpreaderDetectorBackend.o"
+	@echo "... SpreaderDetectorBackend.i"
+	@echo "... SpreaderDetectorBackend.s"
 .PHONY : help
 
 
