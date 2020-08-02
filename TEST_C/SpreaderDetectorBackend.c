@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define START_IDX 0
 #define NO_SUCH_ITEM -1
 #define MAX_LINE_LEN 1024
 #define ALLOC_SIZE 10
@@ -51,6 +52,12 @@ void peopleExitProtocol(FILE **file, Node **array)
 	exit(EXIT_FAILURE);
 }
 
+/**
+ * when allocation fails, this function is being called to free all memory, close all files
+ * and output an error message
+ * @param file - some file that should to be closed
+ * @param array - some array that should be freed
+ */
 void meetingExitProtocol(FILE **file, Edge **array)
 {
 	fprintf(stderr, INPUT_ERROR);
@@ -207,24 +214,37 @@ int floatComp(const void *a, const void *b)
 	return *(const float *) a > *(const float *) b;
 }
 
-int binarySearch(Node* peopleArray,int left,int right,const char* personID)
+/**
+ * binary search based on the IDs
+ * @param peopleArray  - array containing the data of people.in
+ * @param left - left index of array
+ * @param right - right index of array
+ * @param personID - some ID to be found
+ * @return - index of item if found, -1 if no such item exists.
+ */
+int binarySearch(Node *peopleArray, int left, int right, const char *personID)
 {
-	if(right>=left)
+	if (right >= left)
 	{
-		int middle = left+((right-left)/2);
-		if(strcmp(peopleArray[middle].ID,personID)==0) // found the ID
+		int middle = left + ((right - left) / 2);
+		if (strcmp(peopleArray[middle].ID, personID) == 0) // found the ID
 		{
 			return middle;
 		}
-		if(strcmp(peopleArray[middle].ID,personID)>0) // current is bigger->search left part
+		if (strcmp(peopleArray[middle].ID, personID) > 0) // current is bigger->search left part
 		{
-			return binarySearch(peopleArray,left,middle-1,personID);
+			return binarySearch(peopleArray, left, middle - 1, personID);
 		}
 		// else, current is smaller -> search right part
-		return binarySearch(peopleArray,middle+1,right,personID);
+		return binarySearch(peopleArray, middle + 1, right, personID);
 	}
 	// if we didnt find:
 	return NO_SUCH_ITEM;
+}
+
+float calcCrna(float dist,float time)
+{
+	return ((time*MIN_DISTANCE)/(dist*MAX_TIME));
 }
 /**
  *
@@ -232,10 +252,13 @@ int binarySearch(Node* peopleArray,int left,int right,const char* personID)
  * @param sortedPeople
  * @return
  */
-float getInfectionChance(Edge meeting, Node *sortedPeople)
+void updateInfectionData(Edge meeting, Node *sortedPeople)
 {
-	char* id1 = meeting.srcID;
-	char* id2 = meeting.destID;
+	float crna = calcCrna(meeting.dist,meeting.time);
+	char *destID = meeting.destID;
+	int idxOfDest = binarySearch(sortedPeople,START_IDX,gNumOfPeople,destID);
+	sortedPeople[idxOfDest].crna=crna;
+
 }
 
 /**
@@ -247,14 +270,15 @@ void calcOutput(Edge *meetingArray, Node *peopleArray)
 	float *resultsArray = (float *) malloc(gNumOfPeople * sizeof(float));
 	if (resultsArray == NULL)
 	{
+		free(meetingArray);
+		free(peopleArray);
 		fprintf(stderr, STANDARD_LIB_ERR_MSG);
 		exit(EXIT_FAILURE);
 	}
-	qsort(peopleArray, gNumOfPeople, sizeof(Node), idCompare);
+	qsort(peopleArray, gNumOfPeople, sizeof(Node), idCompare); // sorting based on IDs
 	for (int i = 0; i < gNumOfMeetings; i++)
-	{
-		float infectionChance = getInfectionChance(meetingArray[i], peopleArray);
-		resultsArray[i] = infectionChance;
+	{ // calculates Crna for each edge
+		updateInfectionData(meetingArray[i], peopleArray);
 	}
 	qsort(resultsArray, gNumOfPeople, sizeof(float), floatComp);
 
@@ -273,18 +297,21 @@ int main(int argc, char *argv[])
 		char *peoplePath = argv[1];
 		char *meetingPath = argv[2];
 		Node *peopleArray = readPeopleFile(peoplePath);
-		for (int i = 0; i < gNumOfPeople; i++)
-		{
-			printf("name = %s, id = %s, age = %f, crna = %f\n", peopleArray[i].name, peopleArray[i]
-					.ID, peopleArray[i].age, peopleArray[i].crna);
-		}
-		printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+//		for (int i = 0; i < gNumOfPeople; i++)
+//		{
+//			printf("name = %s, id = %s, age = %f, crna = %f\n", peopleArray[i].name, peopleArray[i]
+//					.ID, peopleArray[i].age, peopleArray[i].crna);
+//		}
+//		printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
 		Edge *meetingArray = readMeetingFile(meetingPath);
-		for (int i = 0; i < gNumOfMeetings; i++)
-		{
-			printf("src = %s, dest = %s, dist = %f, time= %f\n", meetingArray[i].srcID,
-				   meetingArray[i].destID, meetingArray[i].dist, meetingArray[i].time);
-		}
+//		for (int i = 0; i < gNumOfMeetings; i++)
+//		{
+//			printf("src = %s, dest = %s, dist = %f, time= %f\n", meetingArray[i].srcID,
+//				   meetingArray[i].destID, meetingArray[i].dist, meetingArray[i].time);
+//		}
+
+
+
 
 	}
 }
