@@ -10,7 +10,6 @@
 #define NO_SUCH_ITEM -1
 #define MAX_LINE_LEN 1024
 #define ALLOC_SIZE 10
-#define END_FILE 0
 #define VALID_ARGS 3
 #define USAGE_ERR "Usage:./SpreaderDetectorBackend <Path to People.in> <Path to Meetings.in>\n"
 #define INPUT_ERR "Error in input file.\n"
@@ -104,7 +103,7 @@ Node *readPeopleFile(char const *const peopleFileName)
 	}
 	// CHECKING VALID INPUT:
 	FILE *peopleFile = fopen(peopleFileName, "r");
-	if (peopleFileName == NULL) //no such file
+	if (peopleFile == NULL) //no such file
 	{
 		fprintf(stderr, INPUT_ERR);
 		exit(EXIT_FAILURE);
@@ -193,13 +192,11 @@ Edge *readMeetingFile(char const *const meetingFileName, Node **peopleArray)
 	}
 	// CHECKING VALID INPUT: \\TODO: change this to check if first line is null-terminator
 	FILE *meetingFile = fopen(meetingFileName, "r");
-	fseek(meetingFile, END_FILE, SEEK_END);
-	if (ftell(meetingFile) == END_FILE || meetingFileName == NULL) //no such file or file is empty
+	if (meetingFile == NULL) //no such file
 	{
-		fprintf(stderr, STANDARD_LIB_ERR_MSG);
+		fprintf(stderr, INPUT_ERR);
 		exit(EXIT_FAILURE);
 	}
-	fseek(meetingFile, END_FILE, SEEK_SET); // file exists & isn't empty - return to the beginning
 
 	// Parsing Data:
 	char meetingLine[MAX_LINE_LEN];
@@ -220,6 +217,13 @@ Edge *readMeetingFile(char const *const meetingFileName, Node **peopleArray)
 		// we are now able to parse the line properly:
 		parseMeetingLine(meetingLine, &meetingArray);
 	}
+	if(gNumOfPeople==START_IDX) // if we have reached here that means we've read the first line and
+		// its null, so the file is empty.
+	{
+		fclose(meetingFile);
+		return NULL;
+	}
+	fclose(meetingFile);
 	return meetingArray;
 }
 
@@ -311,17 +315,7 @@ void calcOutput(Edge *meetingArray, Node *peopleArray)
 		updateInfectionData(meetingArray[i], peopleArray);
 	}
 	// writing output to file:
-	for (int i=0;i<gNumOfPeople;i++)
-	{
-		printf("crna = %f\n",peopleArray[i].crna);
-	}
 	qsort(peopleArray, gNumOfPeople, sizeof(Node), crnaComp); // sort by crna value
-	printf("@@@@@crna after:@@@@@@@@\n");
-	for (int i=0;i<gNumOfPeople;i++)
-	{
-		printf("crna = %f\n",peopleArray[i].crna);
-	}
-	printf("@@@@@@@@@@@@@@@@@@@@@@@@@\n");
 	FILE *outFile = fopen(OUTPUT_FILE, "w");
 	for (int i = 0; i < gNumOfPeople; i++)
 	{
@@ -356,29 +350,12 @@ int main(int argc, char *argv[])
 		char *peoplePath = argv[1];
 		char *meetingPath = argv[2];
 		Node *peopleArray = readPeopleFile(peoplePath);
-		for (int i = 0; i < gNumOfPeople; i++)
-		{
-			printf("name = %s, id = %s, age = %f, crna = %f\n", peopleArray[i].name, peopleArray[i]
-					.ID, peopleArray[i].age, peopleArray[i].crna);
-		}
-		printf("@@@@@@@@@@@@@AFTER@@@@@@@@@@@\n");
 		Edge *meetingArray = readMeetingFile(meetingPath, &peopleArray);
-//		for (int i = 0; i < gNumOfMeetings; i++)
-//		{
-//			printf("src = %s, dest = %s, dist = %f, time= %f\n", meetingArray[i].srcID,
-//				   meetingArray[i].destID, meetingArray[i].dist, meetingArray[i].time);
-//		}
 		calcOutput(meetingArray, peopleArray);
-		for (int i = 0; i < gNumOfPeople; i++)
-		{
-			printf("name = %s, id = %s, age = %f, crna = %f\n", peopleArray[i].name, peopleArray[i]
-					.ID, peopleArray[i].age, peopleArray[i].crna);
-		}
-		printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
 	}
 }
 
 //TODO: make sure:
-// 1. if both empty - return empty
-// 2. if only meeting is empty - print all people and say that they are not infected
+// 1. if both empty - return empty - DONE
+// 2. if only meeting is empty - print all people and say that they are not infected - DONE
 // 3. notice that if the people file is empty the meeting has to be empty as well. (can assume that)
