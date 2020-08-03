@@ -43,34 +43,6 @@ typedef struct Edge
 } Edge;
 
 /**
- * when allocation fails, this function is being called to free all memory, close all files
- * and output an error message
- * @param file - some file that should to be closed
- * @param array - some array that should be freed
- */
-void peopleExitProtocol(FILE **file, Person **array)
-{
-	fprintf(stderr, STANDARD_LIB_ERR_MSG);
-	fclose(*file);
-	free(array);
-	exit(EXIT_FAILURE);
-}
-
-/**
- * when allocation fails, this function is being called to free all memory, close all files
- * and output an error message
- * @param file - some file that should to be closed
- * @param array - some array that should be freed
- */
-void meetingExitProtocol(FILE **file, Edge **array)
-{
-	fprintf(stderr, STANDARD_LIB_ERR_MSG);
-	fclose(*file);
-	free(array);
-	exit(EXIT_FAILURE);
-}
-
-/**
  * extracts a person data from a line given from people.in
  * @param line - some line in the format <Person name> <Person ID> <Person age>\n
  */
@@ -165,11 +137,13 @@ void parseMeetingLine(char line[], Edge **meetingArray)
  */
 void updateSpreader(char *spreaderID, Person **peopleArray)
 {
-	spreaderID = strtok(spreaderID, "\n");
-	spreaderID = strtok(spreaderID, "\r");
+	long longID1 = 0;
+	longID1 = strtol(spreaderID,NULL,BASE);
 	for (int i = 0; i < gNumOfPeople; i++)
 	{
-		if (strcmp((*peopleArray)[i].ID, spreaderID) == 0) //found the person with the spreaderID
+		long longID2 = 0;
+		longID2 = strtol((*peopleArray)[i].ID,NULL,BASE);
+		if (longID1==longID2) //found the person with the spreader id
 		{
 			(*peopleArray)[i].crna = MAX_CRNA;
 			return;
@@ -204,9 +178,11 @@ Edge *readMeetingFile(char const *const meetingFileName, Person **peopleArray)
 
 	// Parsing Data:
 	char meetingLine[MAX_LINE_LEN];
-	fgets(meetingLine, (int) sizeof(meetingLine), meetingFile); // first line - Spreader
-	char *spreaderID = meetingLine;
-	updateSpreader(spreaderID, peopleArray);
+	if(fgets(meetingLine, (int) sizeof(meetingLine), meetingFile)!=NULL)
+	{// first line - Spreader
+		char *spreaderID = meetingLine;
+		updateSpreader(spreaderID, peopleArray);
+	}
 	while (fgets(meetingLine, (int) sizeof(meetingLine), meetingFile)) // each line is some meeting
 	{
 		if (size == gNumOfMeetings) // this means we don't have enough space to allocate
@@ -224,11 +200,9 @@ Edge *readMeetingFile(char const *const meetingFileName, Person **peopleArray)
 		// we are now able to parse the line properly:
 		parseMeetingLine(meetingLine, &meetingArray);
 	}
-	if (gNumOfPeople == START_IDX) // if we have reached here that means we've read the first
+	if (gNumOfMeetings == START_IDX) // if we have reached here that means we've read the first
 		// line and its null, so the file is empty.
 	{
-		free(peopleArray);
-		peopleArray = NULL;
 		free(meetingArray);
 		meetingArray = NULL;
 		fclose(meetingFile);
@@ -336,6 +310,13 @@ void calcOutput(Edge *meetingArray, Person *peopleArray)
 	// writing output to file:
 	qsort(peopleArray, gNumOfPeople, sizeof(Person), crnaComp); // sort by crna value
 	FILE *outFile = fopen(OUTPUT_FILE, "w");
+	if(outFile==NULL)
+	{
+		free(meetingArray);
+		free(peopleArray);
+		fprintf(stderr,STANDARD_LIB_ERR_MSG);
+		exit(EXIT_FAILURE);
+	}
 	for (int i = 0; i < gNumOfPeople; i++)
 	{
 
@@ -355,6 +336,8 @@ void calcOutput(Edge *meetingArray, Person *peopleArray)
 																	 NULL, BASE));
 		}
 	}
+	free(resultsArray);
+	fclose(outFile);
 }
 
 int main(int argc, char *argv[])
@@ -371,10 +354,7 @@ int main(int argc, char *argv[])
 		Person *peopleArray = readPeopleFile(peoplePath);
 		Edge *meetingArray = readMeetingFile(meetingPath, &peopleArray);
 		calcOutput(meetingArray, peopleArray);
+		free(peopleArray);
+		free(meetingArray);
 	}
 }
-
-//TODO: make sure:
-// 1. if both empty - return empty - DONE
-// 2. if only meeting is empty - print all people and say that they are not infected - DONE
-// 3. notice that if the people file is empty the meeting has to be empty as well. (can assume that)
