@@ -4,6 +4,7 @@
 #include <string.h>
 
 #define BASE 10
+#define MAX_CRNA 1
 #define NEG_RETURN -1
 #define START_IDX 0
 #define NO_SUCH_ITEM -1
@@ -158,11 +159,14 @@ void parseMeetingLine(char line[], Edge **meetingArray)
  */
 void updateSpreader(char *spreaderID, Node **peopleArray)
 {
+	spreaderID = strtok(spreaderID,"\n");
+	spreaderID = strtok(spreaderID,"\r");
 	for (int i = 0; i < gNumOfPeople; i++)
 	{
 		if (strcmp((*peopleArray)[i].ID, spreaderID) == 0) //found the person with the spreaderID
 		{
-			(*peopleArray)[i].crna = 1;
+			(*peopleArray)[i].crna = MAX_CRNA;
+			return;
 		}
 	}
 }
@@ -182,7 +186,7 @@ Edge *readMeetingFile(char const *const meetingFileName, Node **peopleArray)
 		fprintf(stderr, STANDARD_LIB_ERR_MSG);
 		exit(EXIT_FAILURE);
 	}
-	// CHECKING VALID INPUT:
+	// CHECKING VALID INPUT: \\TODO: change this to check if first line is null-terminator
 	FILE *meetingFile = fopen(meetingFileName, "r");
 	fseek(meetingFile, END_FILE, SEEK_END);
 	if (ftell(meetingFile) == END_FILE || meetingFileName == NULL) //no such file or file is empty
@@ -279,7 +283,7 @@ void updateInfectionData(Edge meeting, Node *sortedPeople)
 	char *srcID = meeting.srcID;
 	int idxOfSrc = binarySearch(sortedPeople, START_IDX, gNumOfPeople, srcID);
 	int idxOfDest = binarySearch(sortedPeople, START_IDX, gNumOfPeople, destID);
-	sortedPeople[idxOfDest].crna = crna + sortedPeople[idxOfSrc].crna;
+	sortedPeople[idxOfDest].crna = crna * sortedPeople[idxOfSrc].crna;
 }
 
 /**
@@ -341,13 +345,24 @@ int main(int argc, char *argv[])
 			printf("name = %s, id = %s, age = %f, crna = %f\n", peopleArray[i].name, peopleArray[i]
 					.ID, peopleArray[i].age, peopleArray[i].crna);
 		}
-		printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+		printf("@@@@@@@@@@@@@AFTER@@@@@@@@@@@\n");
 		Edge *meetingArray = readMeetingFile(meetingPath, &peopleArray);
-		for (int i = 0; i < gNumOfMeetings; i++)
-		{
-			printf("src = %s, dest = %s, dist = %f, time= %f\n", meetingArray[i].srcID,
-				   meetingArray[i].destID, meetingArray[i].dist, meetingArray[i].time);
-		}
+//		for (int i = 0; i < gNumOfMeetings; i++)
+//		{
+//			printf("src = %s, dest = %s, dist = %f, time= %f\n", meetingArray[i].srcID,
+//				   meetingArray[i].destID, meetingArray[i].dist, meetingArray[i].time);
+//		}
 		calcOutput(meetingArray, peopleArray);
+		for (int i = 0; i < gNumOfPeople; i++)
+		{
+			printf("name = %s, id = %s, age = %f, crna = %f\n", peopleArray[i].name, peopleArray[i]
+					.ID, peopleArray[i].age, peopleArray[i].crna);
+		}
+		printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
 	}
 }
+
+//TODO: make sure:
+// 1. if both empty - return empty
+// 2. if only meeting is empty - print all people and say that they are not infected
+// 3. notice that if the people file is empty the meeting has to be empty as well. (can assume that)
