@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define BASE 10
 #define NEG_RETURN -1
 #define START_IDX 0
 #define NO_SUCH_ITEM -1
@@ -307,17 +308,19 @@ void calcOutput(Edge *meetingArray, Node *peopleArray)
 	{
 		if (peopleArray[i].crna >= REGULAR_QUARANTINE_THRESHOLD)
 		{
-			fprintf(outFile, "%s", REGULAR_QUARANTINE_MSG);
+			fprintf(outFile,REGULAR_QUARANTINE_MSG,peopleArray[i].name,
+					strtoul(peopleArray[i].ID,NULL,BASE));
 		}
 		else if (peopleArray[i].crna >= MEDICAL_SUPERVISION_THRESHOLD)
 		{
-			fprintf(outFile, "%s", MEDICAL_SUPERVISION_THRESHOLD_MSG);
+			fprintf(outFile, MEDICAL_SUPERVISION_THRESHOLD_MSG,peopleArray[i].name,
+					strtoul(peopleArray[i].ID,NULL,BASE));
 		}
 		else // crna < medical threshold
 		{
-			fprintf(outFile, "%s", CLEAN_MSG);
+			fprintf(outFile, CLEAN_MSG,peopleArray[i].name,
+					strtoul(peopleArray[i].ID,NULL,BASE));
 		}
-
 	}
 }
 
@@ -333,20 +336,18 @@ int main(int argc, char *argv[])
 		char *peoplePath = argv[1];
 		char *meetingPath = argv[2];
 		Node *peopleArray = readPeopleFile(peoplePath);
-//		for (int i = 0; i < gNumOfPeople; i++)
-//		{
-//			printf("name = %s, id = %s, age = %f, crna = %f\n", peopleArray[i].name, peopleArray[i]
-//					.ID, peopleArray[i].age, peopleArray[i].crna);
-//		}
-//		printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+		for (int i = 0; i < gNumOfPeople; i++)
+		{
+			printf("name = %s, id = %s, age = %f, crna = %f\n", peopleArray[i].name, peopleArray[i]
+					.ID, peopleArray[i].age, peopleArray[i].crna);
+		}
+		printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
 		Edge *meetingArray = readMeetingFile(meetingPath, &peopleArray);
-//		for (int i = 0; i < gNumOfMeetings; i++)
-//		{
-//			printf("src = %s, dest = %s, dist = %f, time= %f\n", meetingArray[i].srcID,
-//				   meetingArray[i].destID, meetingArray[i].dist, meetingArray[i].time);
-//		}
+		for (int i = 0; i < gNumOfMeetings; i++)
+		{
+			printf("src = %s, dest = %s, dist = %f, time= %f\n", meetingArray[i].srcID,
+				   meetingArray[i].destID, meetingArray[i].dist, meetingArray[i].time);
+		}
 		calcOutput(meetingArray, peopleArray);
-
-
 	}
 }
