@@ -3,12 +3,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define NEG_RETURN -1
 #define START_IDX 0
 #define NO_SUCH_ITEM -1
 #define MAX_LINE_LEN 1024
 #define ALLOC_SIZE 10
 #define END_FILE 0
 #define VALID_ARGS 3
+#define USAGE_ERR "Usage:./SpreaderDetectorBackend <Path to People.in> <Path to Meetings.in>\n"
 
 int gNumOfPeople = 0; //global value representing the number of lines in people.in, which
 // corresponds to nodes in the graph data structure
@@ -45,7 +47,7 @@ typedef struct Edge
  */
 void peopleExitProtocol(FILE **file, Node **array)
 {
-	fprintf(stderr, INPUT_ERROR);
+	fprintf(stderr, STANDARD_LIB_ERR_MSG);
 	fclose(*file);
 	free(array);
 	exit(EXIT_FAILURE);
@@ -59,7 +61,7 @@ void peopleExitProtocol(FILE **file, Node **array)
  */
 void meetingExitProtocol(FILE **file, Edge **array)
 {
-	fprintf(stderr, INPUT_ERROR);
+	fprintf(stderr, STANDARD_LIB_ERR_MSG);
 	fclose(*file);
 	free(array);
 	exit(EXIT_FAILURE);
@@ -153,13 +155,13 @@ void parseMeetingLine(char line[], Edge **meetingArray)
  * @param spreaderID
  * @return
  */
-void updateSpreader(char* spreaderID,Node** peopleArray)
+void updateSpreader(char *spreaderID, Node **peopleArray)
 {
-	for (int i=0;i<gNumOfPeople;i++)
+	for (int i = 0; i < gNumOfPeople; i++)
 	{
-		if(strcmp((*peopleArray)[i].ID,spreaderID)==0) //found the person with the spreaderID
+		if (strcmp((*peopleArray)[i].ID, spreaderID) == 0) //found the person with the spreaderID
 		{
-			(*peopleArray)[i].crna=1;
+			(*peopleArray)[i].crna = 1;
 		}
 	}
 }
@@ -168,7 +170,7 @@ void updateSpreader(char* spreaderID,Node** peopleArray)
  * given a name to meeting.in file, reads its data and stores it for later use.
  * @param meetingFileName - meeting.in file
  */
-Edge *readMeetingFile(char const *const meetingFileName, Node** peopleArray)
+Edge *readMeetingFile(char const *const meetingFileName, Node **peopleArray)
 {
 	// Memory Allocation:
 	int size = ALLOC_SIZE;
@@ -193,7 +195,7 @@ Edge *readMeetingFile(char const *const meetingFileName, Node** peopleArray)
 	char meetingLine[MAX_LINE_LEN];
 	fgets(meetingLine, (int) sizeof(meetingLine), meetingFile); // first line - Spreader
 	char *spreaderID = meetingLine;
-	updateSpreader(spreaderID,peopleArray);
+	updateSpreader(spreaderID, peopleArray);
 	while (fgets(meetingLine, (int) sizeof(meetingLine), meetingFile)) // each line is some meeting
 	{
 		if (size == gNumOfMeetings) // this means we don't have enough space to allocate
@@ -222,13 +224,13 @@ int idCompare(const void *a, const void *b)
 /**
  * compare function based on floats
  */
-int floatComp(const void *a, const void *b)
+int crnaComp(const void *a, const void *b)
 {
-	if (*(const float *) a < *(const float *) b)
+	if ((*(Node *) a).crna < (*(Node *) b).crna)
 	{
-		return -1;
+		return NEG_RETURN;
 	}
-	return *(const float *) a > *(const float *) b;
+	return ((*(Node *) a).crna < (*(Node *) b).crna);
 }
 
 /**
@@ -259,10 +261,11 @@ int binarySearch(Node *peopleArray, int left, int right, const char *personID)
 	return NO_SUCH_ITEM;
 }
 
-float calcCrna(float dist,float time)
+float calcCrna(float dist, float time)
 {
-	return ((time*MIN_DISTANCE)/(dist*MAX_TIME));
+	return ((time * MIN_DISTANCE) / (dist * MAX_TIME));
 }
+
 /**
  * @param meeting
  * @param sortedPeople
@@ -270,10 +273,12 @@ float calcCrna(float dist,float time)
  */
 void updateInfectionData(Edge meeting, Node *sortedPeople)
 {
-	float crna = calcCrna(meeting.dist,meeting.time);
+	float crna = calcCrna(meeting.dist, meeting.time);
 	char *destID = meeting.destID;
-	int idxOfDest = binarySearch(sortedPeople,START_IDX,gNumOfPeople,destID);
-	sortedPeople[idxOfDest].crna=crna;
+	char *srcID = meeting.srcID;
+	int idxOfSrc = binarySearch(sortedPeople, START_IDX, gNumOfPeople, srcID);
+	int idxOfDest = binarySearch(sortedPeople, START_IDX, gNumOfPeople, destID);
+	sortedPeople[idxOfDest].crna = crna + sortedPeople[idxOfSrc].crna;
 }
 
 /**
@@ -295,16 +300,32 @@ void calcOutput(Edge *meetingArray, Node *peopleArray)
 	{ // calculates Crna for each edge
 		updateInfectionData(meetingArray[i], peopleArray);
 	}
-	qsort(resultsArray, gNumOfPeople, sizeof(float), floatComp);
-	//TODO: finished here, not sure if I need to multiply the crna, or its fine the way it is.
+	// writing output to file:
+	qsort(peopleArray, gNumOfPeople, sizeof(Node), crnaComp); // sort by crna value
+	FILE *outFile = fopen(OUTPUT_FILE, "w");
+	for (int i = 0; i < gNumOfPeople; i++)
+	{
+		if (peopleArray[i].crna >= REGULAR_QUARANTINE_THRESHOLD)
+		{
+			fprintf(outFile, "%s", REGULAR_QUARANTINE_MSG);
+		}
+		else if (peopleArray[i].crna >= MEDICAL_SUPERVISION_THRESHOLD)
+		{
+			fprintf(outFile, "%s", MEDICAL_SUPERVISION_THRESHOLD_MSG);
+		}
+		else // crna < medical threshold
+		{
+			fprintf(outFile, "%s", CLEAN_MSG);
+		}
+
+	}
 }
 
 int main(int argc, char *argv[])
 {
 	if (argc != VALID_ARGS)
 	{
-		fprintf(stderr, "Usage:./SpreaderDetectorBackend <Path to People.in> <Path to Meetings"
-						".in>\n");
+		fprintf(stderr,USAGE_ERR);
 		exit(EXIT_FAILURE);
 	}
 	else
@@ -318,14 +339,13 @@ int main(int argc, char *argv[])
 //					.ID, peopleArray[i].age, peopleArray[i].crna);
 //		}
 //		printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
-		Edge *meetingArray = readMeetingFile(meetingPath,&peopleArray);
+		Edge *meetingArray = readMeetingFile(meetingPath, &peopleArray);
 //		for (int i = 0; i < gNumOfMeetings; i++)
 //		{
 //			printf("src = %s, dest = %s, dist = %f, time= %f\n", meetingArray[i].srcID,
 //				   meetingArray[i].destID, meetingArray[i].dist, meetingArray[i].time);
 //		}
-		calcOutput(meetingArray,peopleArray);
-
+		calcOutput(meetingArray, peopleArray);
 
 
 	}
