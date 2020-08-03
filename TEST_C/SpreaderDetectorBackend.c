@@ -138,12 +138,12 @@ void parseMeetingLine(char line[], Edge **meetingArray)
 void updateSpreader(char *spreaderID, Person **peopleArray)
 {
 	long longID1 = 0;
-	longID1 = strtol(spreaderID,NULL,BASE);
+	longID1 = strtol(spreaderID, NULL, BASE);
 	for (int i = 0; i < gNumOfPeople; i++)
 	{
 		long longID2 = 0;
-		longID2 = strtol((*peopleArray)[i].ID,NULL,BASE);
-		if (longID1==longID2) //found the person with the spreader id
+		longID2 = strtol((*peopleArray)[i].ID, NULL, BASE);
+		if (longID1 == longID2) //found the person with the spreader id
 		{
 			(*peopleArray)[i].crna = MAX_CRNA;
 			return;
@@ -178,7 +178,7 @@ Edge *readMeetingFile(char const *const meetingFileName, Person **peopleArray)
 
 	// Parsing Data:
 	char meetingLine[MAX_LINE_LEN];
-	if(fgets(meetingLine, (int) sizeof(meetingLine), meetingFile)!=NULL)
+	if (fgets(meetingLine, (int) sizeof(meetingLine), meetingFile) != NULL)
 	{// first line - Spreader
 		char *spreaderID = meetingLine;
 		updateSpreader(spreaderID, peopleArray);
@@ -310,11 +310,11 @@ void calcOutput(Edge *meetingArray, Person *peopleArray)
 	// writing output to file:
 	qsort(peopleArray, gNumOfPeople, sizeof(Person), crnaComp); // sort by crna value
 	FILE *outFile = fopen(OUTPUT_FILE, "w");
-	if(outFile==NULL)
+	if (outFile == NULL)
 	{
 		free(meetingArray);
 		free(peopleArray);
-		fprintf(stderr,STANDARD_LIB_ERR_MSG);
+		fprintf(stderr, STANDARD_LIB_ERR_MSG);
 		exit(EXIT_FAILURE);
 	}
 	for (int i = 0; i < gNumOfPeople; i++)
