@@ -231,7 +231,7 @@ int idCompare(const void *a, const void *b)
  */
 int crnaComp(const void *a, const void *b)
 {
-	if ((*(Node *) a).crna < (*(Node *) b).crna)
+	if ((*(Node *) a).crna > (*(Node *) b).crna)
 	{
 		return NEG_RETURN;
 	}
@@ -306,18 +306,29 @@ void calcOutput(Edge *meetingArray, Node *peopleArray)
 		updateInfectionData(meetingArray[i], peopleArray);
 	}
 	// writing output to file:
+	for (int i=0;i<gNumOfPeople;i++)
+	{
+		printf("crna = %f\n",peopleArray[i].crna);
+	}
 	qsort(peopleArray, gNumOfPeople, sizeof(Node), crnaComp); // sort by crna value
+	printf("@@@@@crna after:@@@@@@@@\n");
+	for (int i=0;i<gNumOfPeople;i++)
+	{
+		printf("crna = %f\n",peopleArray[i].crna);
+	}
+	printf("@@@@@@@@@@@@@@@@@@@@@@@@@\n");
 	FILE *outFile = fopen(OUTPUT_FILE, "w");
 	for (int i = 0; i < gNumOfPeople; i++)
 	{
-		if (peopleArray[i].crna >= REGULAR_QUARANTINE_THRESHOLD)
-		{
-			fprintf(outFile,REGULAR_QUARANTINE_MSG,peopleArray[i].name,
-					strtoul(peopleArray[i].ID,NULL,BASE));
-		}
-		else if (peopleArray[i].crna >= MEDICAL_SUPERVISION_THRESHOLD)
+
+		if (peopleArray[i].crna >= MEDICAL_SUPERVISION_THRESHOLD)
 		{
 			fprintf(outFile, MEDICAL_SUPERVISION_THRESHOLD_MSG,peopleArray[i].name,
+					strtoul(peopleArray[i].ID,NULL,BASE));
+		}
+		else if (peopleArray[i].crna >= REGULAR_QUARANTINE_THRESHOLD)
+		{
+			fprintf(outFile,REGULAR_QUARANTINE_MSG,peopleArray[i].name,
 					strtoul(peopleArray[i].ID,NULL,BASE));
 		}
 		else // crna < medical threshold
