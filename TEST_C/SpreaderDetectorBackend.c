@@ -13,6 +13,7 @@
 #define END_FILE 0
 #define VALID_ARGS 3
 #define USAGE_ERR "Usage:./SpreaderDetectorBackend <Path to People.in> <Path to Meetings.in>\n"
+#define INPUT_ERR "Error in input file.\n"
 
 int gNumOfPeople = 0; //global value representing the number of lines in people.in, which
 // corresponds to nodes in the graph data structure
@@ -103,14 +104,11 @@ Node *readPeopleFile(char const *const peopleFileName)
 	}
 	// CHECKING VALID INPUT:
 	FILE *peopleFile = fopen(peopleFileName, "r");
-	fseek(peopleFile, END_FILE, SEEK_END);
-	if (ftell(peopleFile) == END_FILE || peopleFileName == NULL) //no such file or file is empty
+	if (peopleFileName == NULL) //no such file
 	{
-		fprintf(stderr, STANDARD_LIB_ERR_MSG);
+		fprintf(stderr, INPUT_ERR);
 		exit(EXIT_FAILURE);
 	}
-	fseek(peopleFile, END_FILE, SEEK_SET); // file exists and isn't empty - return to the beginning
-
 	// Parsing Data:
 	char personLine[MAX_LINE_LEN];
 	while (fgets(personLine, (int) sizeof(personLine), peopleFile)) // each line is some person
@@ -126,6 +124,13 @@ Node *readPeopleFile(char const *const peopleFileName)
 		}
 		// we are now able to parse the line properly:
 		parsePersonLine(personLine, &peopleArray);
+	}
+	if(gNumOfPeople==START_IDX) // if we have reached here that means we've read the first line and
+		// its null, so the file is empty.
+	{
+		fclose(peopleFile);
+		free(peopleArray);
+		return NULL;
 	}
 	fclose(peopleFile);
 	return peopleArray;
