@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 #define SUCCESS 0
 #define BASE 10
 #define MAX_CRNA 1
@@ -358,5 +359,6 @@ int main(int argc, char *argv[])
 		free(peopleArray);
 		free(meetingArray);
 	}
+
 	return SUCCESS;
 }
