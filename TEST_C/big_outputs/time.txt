@@ -1,0 +1,4 @@
+6 - took 165.578003 seconds
+7 - took 166.108994 seconds
+8 - took 145.921005 seconds
+9 - took 107.140999 seconds
