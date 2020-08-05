@@ -1,2 +1,2 @@
 # C-CPP Projects
- all projects i've submitted during the course C,C++
+ all projects i've submitted throughout the course C,C++
