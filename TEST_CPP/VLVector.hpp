@@ -89,7 +89,7 @@ public:
 		}
 		else // index is ok
 		{
-			if(isDynamic())
+			if (isDynamic())
 			{
 				return _dynamicMemory[index];
 			}
@@ -99,57 +99,62 @@ public:
 			}
 		}
 	}
+
 	/**
 	 * calculates cap_C(s)
 	 * @return new size of allocation
 	 */
 	int newCapacity()
 	{
-		return floor(3 * (getCurrSize()+1) /2);
+		return floor(3 * (getCurrSize() + 1) / 2);
 	}
+
 	/**
 	 * gets an item of generic type T and adds it the the end of the vector
 	 * based on the provided formula
 	 * @param item - some item to add
 	 */
-	void push_back(const T& item)
+	void push_back(const T &item)
 	{
 		// case I - static memory,  enough room
-		if(getCurrSize()+1<=getCapacity() && !isDynamic())
+		if (getCurrSize() + 1 <= getCapacity() && !isDynamic())
 		{
 			_currSize++;
-			_staticMemory[_currSize]=item;
+			_staticMemory[_currSize] = item;
 		}
 
 		// case II - static memory, not enough room
-		else if (getCurrSize()+1>getCapacity() && !isDynamic())
+		else if (getCurrSize() + 1 > getCapacity() && !isDynamic())
 		{
 			_dynamicMemory = new(std::nothrow) T[newCapacity()];
-			if (_dynamicMemory==nullptr) {exit(EXIT_FAILURE);}
+			if (_dynamicMemory == nullptr)
+			{ exit(EXIT_FAILURE); }
 
-			for (int i=0;i<getCurrSize();i++) // now copying from static to dynamic
+			for (int i = 0; i < getCurrSize(); i++) // now copying from static to dynamic
 			{
-				_dynamicMemory[i]=_staticMemory[i];
+				_dynamicMemory[i] = _staticMemory[i];
 			}
 			_staticMemory = nullptr;
 			_currSize++;
 			_dynamicMemory[_currSize] = item;
 		}
 		// case III - dynamic memory, enough room
-		else if (getCurrSize()<getCapacity() && isDynamic())
+		else if (getCurrSize() < getCapacity() && isDynamic())
 		{
 			_currSize++;
-			_dynamicMemory[_currSize]=item;
+			_dynamicMemory[_currSize] = item;
 		}
 		// case IV - dynamic memory, not enough room
-		else if  (getCurrSize()>=getCapacity() && isDynamic())
+		else if (getCurrSize() >= getCapacity() && isDynamic())
 		{
-			_dynamicMemory = realloc(_dynamicMemory,newCapacity()*sizeof(T));
-			if (_dynamicMemory==nullptr) {exit(EXIT_FAILURE);}
+			T *temp = new(std::nothrow) T[newCapacity()];
+			if (temp == nullptr)
+			{ exit(EXIT_FAILURE); } //TODO - finish this part
 
-			for (int i=0;i<getCurrSize();i++) // now copying from static to dynamic
+
+			for (int i = 0; i < getCurrSize(); i++) // now copying from static to dynamic
 			{
-				_dynamicMemory[i]=_staticMemory[i];
+				_dynamicMemory[i] = _staticMemory[i];
 			}
 			_staticMemory = nullptr;
 			_currSize++;
@@ -157,7 +162,7 @@ public:
 
 		}
 
-		if(getCurrSize()>getStaticCap()) // this means we need to change to dynamic memory
+		if (getCurrSize() > getStaticCap()) // this means we need to change to dynamic memory
 		{
 			isDynamic = true;
 		}
@@ -170,9 +175,9 @@ public:
 	void pop_back()
 	{
 		_currSize--;
-		if(_currSize<=getStaticCap()) // if so - we need to go back to static
+		if (_currSize <= getStaticCap()) // if so - we need to go back to static
 		{
-			for(int i=0;i++;i<_currSize)
+			for (int i = 0; i++; i < _currSize)
 			{
 				_staticMemory[i] = _dynamicMemory[i];
 			}
@@ -187,10 +192,88 @@ public:
 	void clear()
 	{
 		_currSize = INITIAL_SIZE;
-		if(isDynamic)
+		if (isDynamic)
 		{
 			free(_dynamicMemory);
 		}
+	}
+
+	/**
+	 * @return pointer to the array that contains the data (dynamic or static)
+	 */
+	T *data()
+	{
+		if (isDynamic)
+		{
+			return _dynamicMemory;
+		}
+		return _staticMemory;
+	}
+
+	/**
+	 * assignment opeartor - this = vec
+	 * @param vec some vl-vector
+	 * @return this after assignment to vec
+	 */
+	VLVector &operator=(const VLVector &vec)
+	{
+		if (this != &vec) // vec is not this
+		{
+
+		}
+	}
+
+
+	/**
+	 * fetches the i'th element of this vector
+	 * @param i
+	 * @return i'th element of this vector
+	 */
+	T operator[](int i)
+	{
+		if (isDynamic)
+		{
+			return _dynamicMemory[i];
+		}
+		return _staticMemory[i];
+	}
+
+	/**
+	 * @param vec some vector to be compared with
+	 * @return true - this == vec, otherwise false
+	 */
+	bool operator==(const VLVector &vec)
+	{
+		if (isDynamic)
+		{
+			for (int i = 0; i < _currSize; i++)
+			{
+				if (_dynamicMemory[i] != vec._dynamicMemory)
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0; i < _currSize; i++)
+			{
+				if (_staticMemory[i] != vec._staticMemory)
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * @param vec some vector to be compared with
+	 * @return true - this != vec, otherwise false
+	 */
+	bool operator!=(const VLVector &vec)
+	{
+		return !operator==(vec);
 	}
 
 };
