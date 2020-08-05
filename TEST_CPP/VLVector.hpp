@@ -181,6 +181,18 @@ public:
 		}
 	}
 
+	/**
+	 * removes all item in the vector
+	 */
+	void clear()
+	{
+		_currSize = INITIAL_SIZE;
+		if(isDynamic)
+		{
+			free(_dynamicMemory);
+		}
+	}
+
 };
 
 
