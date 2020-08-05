@@ -12,17 +12,24 @@
 template<class T, size_t StaticCapacity = DEFAULT_SIZE>
 class VLVector
 {
-
 private:
-	size_t _staticCap = StaticCapacity; // the static capacity
-	T *_staticMemory = nullptr; // initial storage (stack)
-	T *_dynamicMemory = nullptr; // storage when surpassing the static capacity threshold (heap)
+	size_t _staticCap; // the static capacity (provided in template)
+	T *_staticMemory; // initial storage (stack)
+	T *_dynamicMemory; // storage when surpassing the static capacity threshold (heap)
 	size_t _capacity; // current maximum amount of elements that can be inserted to the vector
 	size_t _currSize; // current amount of items in the vector
-	bool _isDynamic = false; // boolean representing if were working on static or dynamic memory
+	bool _isDynamic; // boolean representing if were working on static or dynamic memory
 
 public:
+	/**
+	 * default ctor
+	 */
+	explicit VLVector() : _staticCap(StaticCapacity), _staticMemory(nullptr),
+						  _dynamicMemory(nullptr), _capacity(INITIAL_SIZE), _currSize(INITIAL_SIZE),
+						  _isDynamic(false)
+	{}
 
+	explicit VLVector(const VLVector &vec): 
 	/**
 	 * @tparam InputIterator - segment [first,last) of T values
 	 * @param first
@@ -123,7 +130,7 @@ public:
 			_staticMemory[_currSize] = item;
 		}
 
-		// case II - static memory, not enough room
+			// case II - static memory, not enough room
 		else if (getCurrSize() + 1 > getCapacity() && !_isDynamic())
 		{
 			_dynamicMemory = new(std::nothrow) T[newCapacity()];
@@ -138,23 +145,24 @@ public:
 			_currSize++;
 			_dynamicMemory[_currSize] = item;
 		}
-		// case III - dynamic memory, enough room
+			// case III - dynamic memory, enough room
 		else if (getCurrSize() < getCapacity() && _isDynamic())
 		{
 			_currSize++;
 			_dynamicMemory[_currSize] = item;
 		}
-		// case IV - dynamic memory, not enough room
+			// case IV - dynamic memory, not enough room
 		else if (getCurrSize() >= getCapacity() && _isDynamic())
 		{
 			_currSize++;
 			T *temp = new(std::nothrow) T[newCapacity()];
-			if (temp == nullptr) { exit(EXIT_FAILURE); }
-			for(int i=0;i<_currSize-1;i++)
+			if (temp == nullptr)
+			{ exit(EXIT_FAILURE); }
+			for (int i = 0; i < _currSize - 1; i++)
 			{
 				temp[i] = _dynamicMemory[i];
 			}
-			temp[_currSize]=item;
+			temp[_currSize] = item;
 			delete[] _dynamicMemory;
 			_dynamicMemory = temp;
 		}
@@ -214,18 +222,19 @@ public:
 	{
 		if (this != &vec) // vec is not this
 		{
-			if(vec._isDynamic)
+			if (vec._isDynamic)
 			{
 				_dynamicMemory = new(std::nothrow) T[vec._currSize];
-				if(_dynamicMemory==nullptr) {exit(EXIT_FAILURE);}
-				for (int i=0; i<vec._currSize;i++)
+				if (_dynamicMemory == nullptr)
+				{ exit(EXIT_FAILURE); }
+				for (int i = 0; i < vec._currSize; i++)
 				{
 					_dynamicMemory[i] = vec._dynamicMemory[i];
 				}
 			}
 			else // vec is static
 			{
-				for (int i=0; i<vec._currSize;i++)
+				for (int i = 0; i < vec._currSize; i++)
 				{
 					_staticMemory[i] = vec._staticMemory[i];
 				}
