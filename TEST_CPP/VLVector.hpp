@@ -99,34 +99,61 @@ public:
 			}
 		}
 	}
-
+	/**
+	 * calculates cap_C(s)
+	 * @return new size of allocation
+	 */
+	int newCapacity()
+	{
+		return floor(3 * (getCurrSize()+1) /2);
+	}
 	/**
 	 * gets an item of generic type T and adds it the the end of the vector
+	 * based on the provided formula
 	 * @param item - some item to add
 	 */
 	void push_back(const T& item)
 	{
 		// case I - static memory,  enough room
-		if(getCurrSize()<getCapacity() && !isDynamic())
+		if(getCurrSize()+1<=getCapacity() && !isDynamic())
 		{
 			_currSize++;
 			_staticMemory[_currSize]=item;
 		}
 
-		// case II - static memory, not enough room -> allocate dynamic memory
-		else if (getCurrSize()>=getCapacity() && !isDynamic())
+		// case II - static memory, not enough room
+		else if (getCurrSize()+1>getCapacity() && !isDynamic())
 		{
-			
+			_dynamicMemory = new(std::nothrow) T[newCapacity()];
+			if (_dynamicMemory==nullptr) {exit(EXIT_FAILURE);}
 
+			for (int i=0;i<getCurrSize();i++) // now copying from static to dynamic
+			{
+				_dynamicMemory[i]=_staticMemory[i];
+			}
+			_staticMemory = nullptr;
+			_currSize++;
+			_dynamicMemory[_currSize] = item;
 		}
 		// case III - dynamic memory, enough room
 		else if (getCurrSize()<getCapacity() && isDynamic())
 		{
-
+			_currSize++;
+			_dynamicMemory[_currSize]=item;
 		}
-		// case IV - dynamic memory, not enough room -> re-allocate dynamic memory
+		// case IV - dynamic memory, not enough room
 		else if  (getCurrSize()>=getCapacity() && isDynamic())
 		{
+			_dynamicMemory = realloc(_dynamicMemory,newCapacity()*sizeof(T));
+			if (_dynamicMemory==nullptr) {exit(EXIT_FAILURE);}
+
+			for (int i=0;i<getCurrSize();i++) // now copying from static to dynamic
+			{
+				_dynamicMemory[i]=_staticMemory[i];
+			}
+			_staticMemory = nullptr;
+			_currSize++;
+			_dynamicMemory[_currSize] = item;
 
 		}
 
