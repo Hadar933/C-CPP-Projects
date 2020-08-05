@@ -1,52 +1,33 @@
 #ifndef TEST_CPP_VLVECTOR_HPP
 #define TEST_CPP_VLVECTOR_HPP
 
-#include <iostream>
 #include <cmath>
+#include <cstdlib>
+#include <stdexcept>
 
 #define DEFAULT_SIZE 16
 #define INITIAL_SIZE 0
+#define OUT_OF_RANGE_MSG "index out of range"
 
 template<class T, size_t StaticCapacity = DEFAULT_SIZE>
 class VLVector
 {
 
 private:
-	T *_vec= nullptr; // stores the values of the vector
-	size_t _size;
-	size_t _statCap;
+	size_t _staticCap = StaticCapacity; // the static capacity
+	T *_vec = nullptr; // stores all the values of the vector
+	size_t capacity; // current maximum amount of elements that can be inserted to the vector
+	size_t _currSize; // current amount of items in the vector
 
 public:
-	/**
-	 * constructor that initializes a VLVector instance
-	 * @param vec
-	 * @param size
-	 */
-	VLVector(size_t size, size_t statCap) :
-			_size(size), _statCap(statCap)
-	{
-
-	}
-
-	VLVector() : VLVector(INITIAL_SIZE,INITIAL_SIZE) {}
 
 	/**
-	 * copy ctor
-	 * @param vlv some vlvector
-	 */
-	VLVector(const VLVector &vlv) : VLVector(vlv._vec, vlv._size, vlv._statCap)
-	{
-		*this = vlv;
-	}
-
-	/**
-	 *
 	 * @tparam InputIterator - segment [first,last) of T values
 	 * @param first
 	 * @param last
 	 */
-	template <class InputIterator>
-	VLVector(InputIterator& first, InputIterator &last)
+	template<class InputIterator>
+	VLVector(InputIterator &first, InputIterator &last)
 	{
 	}
 
@@ -60,48 +41,53 @@ public:
 	}
 
 	/**
-	 * @return - number of elements in the vector
+	 * @return - the static capacity of the vector
 	 */
-	size_t getSize() const
+	size_t getStaticCap() const
 	{
-		return _size;
-	}
-
-	size_t getStatCap() const
-	{
-		return _statCap;
+		return _staticCap;
 	}
 
 	/**
-	 * @return - vector's capacity, as given by the provided formula
+	 * @return maximum amount of elements that can be inserted to the vector
 	 */
-	size_t capacity() const
+	size_t getCapacity() const
 	{
-		size_t C = getStatCap();
-		size_t s = getSize();
-		if(s+1 <= C)
-		{
-			return C;
-		}
-		else
-		{
-			unsigned int val = 3 * (s + 1) / 2;
-			return floor(val);
-		}
+		return capacity;
 	}
 
 	/**
-	 * checks if the vector is empty
-	 * @return 1 - empty, 0 - not empty
+	 * @return current amount of items in the vector
+	 */
+	size_t getCurrSize() const
+	{
+		return _currSize;
+	}
+
+	/**
+	 * @return: 1 - vector is empty, 0 - otherwise
 	 */
 	bool empty() const
 	{
-		return getSize()==INITIAL_SIZE;
+		return getCurrSize() == INITIAL_SIZE;
 	}
 
-	
+	T at(int index)
+	{
+		if (index < INITIAL_SIZE || index > getCurrSize()) // invalid index
+		{
+			throw std::out_of_range(OUT_OF_RANGE_MSG);
+		}
+		else // index is ok
+		{
+			return _vec[index];
+		}
+	}
 
-
+	void push_back(T item)
+	{
+		
+	}
 
 };
 
