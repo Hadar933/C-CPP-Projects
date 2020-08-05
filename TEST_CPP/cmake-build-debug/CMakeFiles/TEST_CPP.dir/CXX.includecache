@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/VLVector.hpp
+cmath
+-
+cstdlib
+-
+stdexcept
+-
+
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/main.cpp
+iostream
+-
+VLVector.hpp
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/VLVector.hpp
+
