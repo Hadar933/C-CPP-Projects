@@ -29,7 +29,21 @@ public:
 						  _isDynamic(false)
 	{}
 
-	explicit VLVector(const VLVector &vec): 
+	/**
+	 * copy ctor
+	 * @param vec - some vector to copy its data from
+	 */
+	VLVector(const VLVector &vec): VLVector()
+	{
+		*this = vec;
+		_staticCap = vec._staticCap;
+		_staticMemory = vec._staticMemory;
+		_dynamicMemory = vec._dynamicMemory;
+		_capacity = vec._capacity;
+		_currSize = vec._currSize;
+		_isDynamic = vec._isDynamic;
+	}
+
 	/**
 	 * @tparam InputIterator - segment [first,last) of T values
 	 * @param first
