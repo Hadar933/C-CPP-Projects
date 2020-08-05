@@ -5,7 +5,7 @@
 
 
 #define SUCCESS 0
-#define BASE 10
+#define BASE 10 
 #define MAX_CRNA 1
 #define MIN_CRNA 0
 #define NEG_RETURN -1
