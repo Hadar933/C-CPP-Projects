@@ -147,26 +147,21 @@ public:
 		// case IV - dynamic memory, not enough room
 		else if (getCurrSize() >= getCapacity() && isDynamic())
 		{
-			T *temp = new(std::nothrow) T[newCapacity()];
-			if (temp == nullptr)
-			{ exit(EXIT_FAILURE); } //TODO - finish this part
-
-
-			for (int i = 0; i < getCurrSize(); i++) // now copying from static to dynamic
-			{
-				_dynamicMemory[i] = _staticMemory[i];
-			}
-			_staticMemory = nullptr;
 			_currSize++;
-			_dynamicMemory[_currSize] = item;
-
+			T *temp = new(std::nothrow) T[newCapacity()];
+			if (temp == nullptr) { exit(EXIT_FAILURE); }
+			for(int i=0;i<_currSize-1;i++)
+			{
+				temp[i] = _dynamicMemory[i];
+			}
+			temp[_currSize]=item;
+			delete[] _dynamicMemory;
+			_dynamicMemory = temp;
 		}
-
 		if (getCurrSize() > getStaticCap()) // this means we need to change to dynamic memory
 		{
 			isDynamic = true;
 		}
-
 	}
 
 	/**
