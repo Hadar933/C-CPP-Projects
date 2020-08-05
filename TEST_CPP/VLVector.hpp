@@ -164,6 +164,23 @@ public:
 
 	}
 
+	/**
+	 * removes the last item from the vector
+	 */
+	void pop_back()
+	{
+		_currSize--;
+		if(_currSize<=getStaticCap()) // if so - we need to go back to static
+		{
+			for(int i=0;i++;i<_currSize)
+			{
+				_staticMemory[i] = _dynamicMemory[i];
+			}
+			free(_dynamicMemory);
+			isDynamic = false;
+		}
+	}
+
 };
 
 
