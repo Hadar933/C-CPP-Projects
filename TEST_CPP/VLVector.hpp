@@ -157,6 +157,10 @@ private:
 	};
 
 public:
+	// to create instances of iterators outside of the class:
+	typedef Iterator iterator;
+	typedef constIterator constIterator;
+
 	/**
 	 * default ctor
 	 */
