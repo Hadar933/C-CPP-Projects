@@ -9,6 +9,11 @@
 #define INITIAL_SIZE 0
 #define OUT_OF_RANGE_MSG "index out of range"
 
+/**
+ * class VLVector, initializes a vector with changing memory segments
+ * @tparam T - genetic type
+ * @tparam StaticCapacity -predefined constant representing maximum size of static memory
+ */
 template<class T, size_t StaticCapacity = DEFAULT_SIZE>
 class VLVector
 {
@@ -19,6 +24,28 @@ private:
 	size_t _capacity; // current maximum amount of elements that can be inserted to the vector
 	size_t _currSize; // current amount of items in the vector
 	bool _isDynamic; // boolean representing if were working on static or dynamic memory
+
+	class Iterator
+	{
+	private:
+		T *curr;
+	public:
+		/**
+		 * @return the current data
+		 */
+		Iterator &operator*() const
+		{
+			return curr;
+		}
+	};
+
+	class constIterator
+	{
+	private:
+		T* curr;
+	public:
+
+	};
 
 public:
 	/**
@@ -35,10 +62,11 @@ public:
 	VLVector(const VLVector &vec) : VLVector()
 	{
 		_staticCap = vec._staticCap;
-		_capacity = vec._capacity;
-		_currSize = vec._currSize;
+		_capacity = vec._staticCap;
+		_currSize = INITIAL_SIZE;
 		_isDynamic = vec._isDynamic;
-		*this = vec;
+		*this->operator=(vec);
+
 	}
 
 	/**
@@ -91,7 +119,7 @@ public:
 	 */
 	bool empty() const
 	{
-		return getCurrSize() == INITIAL_SIZE;
+		return _currSize == INITIAL_SIZE;
 	}
 
 	/**
@@ -103,6 +131,7 @@ public:
 	{
 		if (index < INITIAL_SIZE || index > _currSize) // invalid index
 		{
+			delete[] _dynamicMemory;
 			throw std::out_of_range(OUT_OF_RANGE_MSG);
 		}
 		else // index is ok
@@ -154,13 +183,13 @@ public:
 			_currSize++;
 
 		}
-		// case III - dynamic memory, enough room
-		else if (_currSize< _capacity && _isDynamic)
+			// case III - dynamic memory, enough room
+		else if (_currSize < _capacity && _isDynamic)
 		{
 			_dynamicMemory[_currSize] = item;
 			_currSize++;
 		}
-		// case IV - dynamic memory, not enough room
+			// case IV - dynamic memory, not enough room
 		else if (_currSize >= _capacity && _isDynamic)
 		{
 			_capacity = newCapacity();
@@ -168,17 +197,13 @@ public:
 			for (int i = 0; i < _currSize; i++)
 			{
 				temp[i] = _dynamicMemory[i];
-				int x = temp[i];
-				int y = 2;
 			}
 			temp[_currSize] = item;
 			delete[] _dynamicMemory;
 			_dynamicMemory = new T[_capacity];
-			for (int i = 0; i < _currSize+1; i++)
+			for (int i = 0; i < _currSize + 1; i++)
 			{
 				_dynamicMemory[i] = temp[i];
-				int z = _dynamicMemory[i];
-				int t = 2;
 			}
 			_currSize++;
 
@@ -195,16 +220,20 @@ public:
 	 */
 	void pop_back()
 	{
-		_currSize--;
-		if (_currSize <= getStaticCap()) // if so - we need to go back to static
+		if (!empty())
 		{
-			for (int i = 0; i++; i < _currSize)
+			_currSize--;
+			if (_currSize <= getStaticCap()) // if so - we need to go back to static
 			{
-				_staticMemory[i] = _dynamicMemory[i];
+				for (int i = 0; i++; i < _currSize)
+				{
+					_staticMemory[i] = _dynamicMemory[i];
+				}
+				free(_dynamicMemory);
+				_isDynamic = false;
 			}
-			free(_dynamicMemory);
-			_isDynamic = false;
 		}
+
 	}
 
 	/**
@@ -240,9 +269,11 @@ public:
 	{
 		if (this != &vec) // vec is not this
 		{
+			delete[] _dynamicMemory;
+			_dynamicMemory = nullptr;
 			if (vec._isDynamic)
 			{
-				_dynamicMemory = new T[vec._currSize];
+				_dynamicMemory = new T[vec._capacity];
 				for (int i = 0; i < vec._currSize; i++)
 				{
 					_dynamicMemory[i] = vec._dynamicMemory[i];
@@ -275,6 +306,7 @@ public:
 		}
 		return _staticMemory[i];
 	}
+
 	/**
 	 * fetches the i'th element of this vector (const)
 	 * @param i
@@ -299,7 +331,7 @@ public:
 		{
 			for (int i = 0; i < _currSize; i++)
 			{
-				if (_dynamicMemory[i] != vec._dynamicMemory)
+				if (_dynamicMemory[i] != vec._dynamicMemory[i])
 				{
 					return false;
 				}
@@ -309,7 +341,7 @@ public:
 		{
 			for (int i = 0; i < _currSize; i++)
 			{
-				if (_staticMemory[i] != vec._staticMemory)
+				if (_staticMemory[i] != vec._staticMemory[i])
 				{
 					return false;
 				}

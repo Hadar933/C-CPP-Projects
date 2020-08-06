@@ -4,38 +4,27 @@
 
 int main()
 {
-	printf("checking push back func:\n");
-	VLVector<int,2> vlv;
-	vlv.push_back(4);
-	vlv.push_back(7);
-	vlv.push_back(1);
-	vlv.push_back(20);
-	vlv.push_back(23);
-	vlv.push_back(234);
-	vlv.push_back(213);
-	vlv.push_back(31);
-	printf("Pushing:\n");
-	for (int i=0;i<vlv.getCurrSize();i++)
+	VLVector<int, 2> vec1;
+	for (int i = 0; i < 4; i++)
 	{
-		printf("item %d is %d\n",i,vlv[i]);
+		vec1.push_back(i);
 	}
-	printf("Added succesfully\n\n");
-	printf("copy ctor:\n");
-	VLVector<int,2> copy_vec = vlv;
-	for (int i=0;i<copy_vec.getCurrSize();i++)
+	VLVector<int, 2> copy_vec;
+	copy_vec = vec1;
+	int range = vec1.getCapacity();
+	for (int i = 0; i < range; i++)
 	{
-		printf("item %d is %d\n",i,copy_vec[i]);
+		std::cout << "vec1[i]=" << vec1[i] << std::endl;
+		std::cout << "copy_vec[i]=" << copy_vec[i] << std::endl;
 	}
-
-	printf("\nchecking empty func:\n");
-	VLVector<int> empty_vec;
-	printf("vlv(not empty) is empty = %d\n",vlv.empty());
-	printf("empty_vec is empty = %d\n", empty_vec.empty());
-
-	printf("\nchecking at func:\n");
-	std::cout<< "item in vector:" << vlv.at(3) << std::endl;
-	vlv.at(100);
-	std::cout<<vlv.at(5)<<std::endl;
+	copy_vec.push_back(1000);
+	for (int i = 0; i < 10; i++)
+	{
+		int x = vec1[i];
+		int y = copy_vec[i];
+		std::cout << "vec1[i]=" << vec1[i] << std::endl;
+		std::cout << "copy_vec[i]=" << copy_vec[i] << std::endl;
+	}
 
 	return 0;
 }
