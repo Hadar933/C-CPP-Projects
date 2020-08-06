@@ -313,9 +313,9 @@ private:
 		 * @param val - some value to add
 		 * @return pointer to this vec
 		 */
-		Iterator&operator+=(const difference_type& val)
+		Iterator &operator+=(const difference_type &val)
 		{
-			_curr+=val;
+			_curr += val;
 			return *this;
 		}
 
@@ -323,9 +323,9 @@ private:
 		 * @param val - some value to add
 		 * @return pointer to this vec
 		 */
-		Iterator&operator-=(const difference_type& val)
+		Iterator &operator-=(const difference_type &val)
 		{
-			_curr-=val;
+			_curr -= val;
 			return *this;
 		}
 
@@ -417,10 +417,6 @@ public:
 	 * @param first
 	 * @param last
 	 */
-	template<class InputIterator>
-	VLVector(InputIterator &first, InputIterator &last)
-	{
-	}
 
 	/**
 	 * destructor for class VLVector - frees _vec from memory
@@ -511,24 +507,25 @@ public:
 	 * @param adj1 - additional index manipulation
 	 * @param adj2 - additional index manipulation
 	 */
-	void _loopProcess(T* &toArray, T* &fromArray, int start, int end, bool up, int adj1, int adj2)
+	void _loopProcess(T *&toArray, T *&fromArray, int start, int end, bool up, int adj1, int adj2)
 	{
-		if(up)
+		if (up)
 		{
-			for(int i=start;i<end;i++)
+			for (int i = start; i < end; i++)
 			{
-				toArray[i+adj1] = fromArray[i+adj2];
+				toArray[i + adj1] = fromArray[i + adj2];
 			}
 		}
 		else // down
 		{
-			for(int i=start;i<end;i--)
+			for (int i = start; i < end; i--)
 			{
-				toArray[i+adj1] = fromArray[i+adj2];
+				toArray[i + adj1] = fromArray[i + adj2];
 			}
 		}
 
 	}
+
 	/**
 	 * gets an item of generic type T and adds it the the end of the vector
 	 * based on the provided formula
@@ -581,7 +578,7 @@ public:
 			_currSize++;
 
 		}
-		if (_currSize > _staticCap &&!_isDynamic) // this means we need to change to dynamic memory
+		if (_currSize > _staticCap && !_isDynamic) // this means we need to change to dynamic memory
 		{
 			_isDynamic = true;
 		}
@@ -604,6 +601,7 @@ public:
 				}
 				free(_dynamicMemory);
 				_isDynamic = false;
+				_capacity = _staticCap;
 			}
 		}
 
@@ -642,7 +640,7 @@ public:
 	{
 		if (this != &vec) // vec is not this
 		{
-			if(_currSize!=INITIAL_SIZE)
+			if (_currSize != INITIAL_SIZE)
 			{
 				delete[] _dynamicMemory;
 				_dynamicMemory = nullptr;
@@ -674,7 +672,7 @@ public:
 	 * @param i
 	 * @return i'th element of this vector
 	 */
-	T& operator[](int i)
+	T &operator[](int i)
 	{
 		if (_isDynamic)
 		{
@@ -925,54 +923,53 @@ public:
 		if (_currSize + 1 <= _capacity && !_isDynamic)
 		{ // copying backwards so we wont repeat elements //TODO: add or remove loopProcess
 			//_loopProcess(_staticMemory,_staticMemory,_currSize-1,index-1,false,1,0)
-			for (int i = _currSize - 1; i > index - 1; i--)
+			for (int i = _currSize; i > index - 1; i--)
 			{
 				_staticMemory[i + 1] = _staticMemory[i];
 			}
 			_staticMemory[index] = item;
-
 		}
-		// case II - static memory, not enough room
+			// case II - static memory, not enough room
 		else if (_currSize + 1 > _capacity && !_isDynamic)
 		{
 			_capacity = newCapacity();
 			_dynamicMemory = new T[_capacity];
 			//_loopProcess(_dynamicMemory,_staticMemory,0,index,true,0,0);
-			for(int i = 0; i<index; i++) // all elements up to index
+			for (int i = 0; i < index; i++) // all elements up to index
 			{
 				_dynamicMemory[i] = _staticMemory[i];
 			}
 			//_loopProcess(_dynamicMemory,_staticMemory,index+1,_currSize,true,0,0);
-			for(int i = index+1; i<_currSize; i++) // all elements from index+1
+			for (int i = index + 1; i < _currSize; i++) // all elements from index+1
 			{
 				_dynamicMemory[i] = _staticMemory[i];
 			}
 			_dynamicMemory[index] = item; // adding new item itself
 			_isDynamic = true;
 		}
-		// case III - dynamic memory, enough room
-		else if (_currSize<_capacity && _isDynamic)
+			// case III - dynamic memory, enough room
+		else if (_currSize < _capacity && _isDynamic)
 		{// copying backwards so we wont repeat elements
 			//_loopProcess(_dynamicMemory,_dynamicMemory,_currSize,index-1,false,1,0);
-			for (int i = _currSize; i > index - 1; i--) //TODO: this works so fix according to
-				// this loop if needed!
+			for (int i = _currSize;
+				 i > index - 1; i--) //TODO: this works so fix according to this loop if needed!
 			{
-				_dynamicMemory[i] = _dynamicMemory[i-1];
+				_dynamicMemory[i] = _dynamicMemory[i - 1];
 			}
 			_dynamicMemory[index] = item;
 		}
-		// case IV - dynamic memory, not enough room
-		else if (_currSize >=_capacity &&_isDynamic)
+			// case IV - dynamic memory, not enough room
+		else if (_currSize >= _capacity && _isDynamic)
 		{
 			_capacity = newCapacity();
 			T *temp = new T[_capacity];
 			//_loopProcess(temp,_dynamicMemory,0,index,true,0,0);
-			for(int i = 0; i<index; i++) // all elements up to index
+			for (int i = 0; i < index; i++) // all elements up to index
 			{
 				temp[i] = _dynamicMemory[i];
 			}
 			//_loopProcess(temp,_dynamicMemory,index+1,_currSize,true,0,0);
-			for(int i = index+1; i<_currSize; i++) // all elements from index+1
+			for (int i = index + 1; i < _currSize; i++) // all elements from index+1
 			{
 				temp[i] = _dynamicMemory[i];
 			}
@@ -986,11 +983,40 @@ public:
 			}
 		}
 		_currSize++;
-		if (_currSize > _staticCap &&!_isDynamic) // this means we need to change to dynamic memory
+		if (_currSize > _staticCap && !_isDynamic) // this means we need to change to dynamic memory
 		{
 			_isDynamic = true;
 		}
 		return it; //TODO: this might not always be the case (for ex. if reallocation was made
+	}
+
+	/**
+	 * inserts all values in between it1 - it2 before the pos value
+	 * @param it1 - some iterator
+	 * @param it2 - some iterator
+	 * @param pos - position to insert values
+	 * @return iterator pointing to the first item we've added
+	 */
+	template<class InputIterator>
+	Iterator insert(const InputIterator &it1, const InputIterator &it2, const Iterator &pos)
+	{
+		int size = it2-it1;
+		int start = pos-size;
+		int end = pos;
+	}
+
+	/**
+	 * constructor of vector using iterator
+	 * @tparam InputIterator - some input iterator which values will be inserted to a new vector
+	 * @param first - first index
+	 * @param last - last index
+	 */
+	template<class InputIterator>
+	VLVector(InputIterator &first, InputIterator &last):
+			_staticCap(StaticCapacity), _capacity(StaticCapacity), _currSize(INITIAL_SIZE),
+			_isDynamic(false)
+	{
+		insert(first, last, begin());
 	}
 
 
