@@ -45,7 +45,7 @@ private:
 		{}
 
 		/**
-		 * @return reference
+		 * @return reference (object can be changed)
 		 */
 		reference operator*() const
 		{
@@ -54,7 +54,7 @@ private:
 
 		/**
 		 * post increment
-		 * @return value ++
+		 * @return iterator after ++ was performed
 		 */
 		Iterator &operator++()
 		{
@@ -64,6 +64,7 @@ private:
 
 		/**
 		 * pre increment
+		 * @return iterator before ++ was performed
 		 */
 		Iterator operator++(int)
 		{
@@ -74,7 +75,7 @@ private:
 
 		/**
 		 * post decrement
-		 * @return value --
+		 * @return iterator after -- was performed
 		 */
 		Iterator &operator--()
 		{
@@ -84,6 +85,7 @@ private:
 
 		/**
 		 * pre decrement
+		 * @return iterator before -- was performed
 		 */
 		Iterator operator--(int)
 		{
@@ -195,10 +197,176 @@ private:
 	class constIterator
 	{
 	private:
-		T *curr;
+		T *_curr;
 	public:
+		// iterator traits
+		typedef T value_type;
+		typedef T &reference;
+		typedef T *pointer;
+		typedef T difference_type;
+		typedef std::random_access_iterator_tag iterator_category;
+
+		/**
+		 * constructor for constIterator
+		 * @param curr - some value to use in initialization
+		 */
+		constIterator(T *curr) : _curr(curr)
+		{}
+
+		/**
+	 	* @return value_type (object can not be changed)
+	 	*/
+		value_type operator*() const
+		{
+			return *_curr;
+		}
+
+		/**
+		 * post increment
+		 * @return constIterator after ++ was performed
+		 */
+		constIterator &operator++()
+		{
+			_curr++;
+			*this;
+		}
+
+		/**
+		 * pre increment
+		 * @return const iterator before ++ was performed
+		 */
+		constIterator operator++(int)
+		{
+			Iterator temp = *this;
+			_curr++;
+			return temp;
+		}
+
+		/**
+		 * post decrement
+		 * @return const iterator after -- was performed
+		 */
+		Iterator &operator--()
+		{
+			_curr--;
+			return *this;
+		}
+
+		/**
+		 * pre decrement
+		 * @return const iterator before -- was performed
+		 */
+		Iterator operator--(int)
+		{
+			Iterator temp = *this;
+			_curr--;
+			return temp;
+		}
+
+		/**
+		 * operator + that given some value of difference type,
+		 * returns a new Iterator, with value that is the sum of this iterator and val
+		 * @param val - some value to increment in
+		 * @return new const iterator which is curr+other
+		 */
+		constIterator &operator+(const difference_type &val) const
+		{
+			return constIterator(_curr + val);
+		}
+
+		/**
+		 * operator + that given some Iterator, advances this iterator by a factor
+		 * of the other value
+		 * @param other - some iterator
+		 * @return difference type
+		 */
+		difference_type operator+(const constIterator &other) const
+		{
+			return _curr + other._curr;
+		}
+
+		/**
+		 * operator - that given some value of difference type,
+		 * returns a new Iterator, with value that is the difference of this iterator and val
+		 * @param val - some value to increment in
+		 * @return new iterator which is curr-other
+		 */
+		constIterator &operator-(const difference_type &val) const
+		{
+			return constIterator(_curr - val);
+		}
+
+		/**
+		 * operator - that given some Iterator, advances this iterator by a factor
+		 * of the minus other value
+		 * @param other - some const iterator
+		 * @return difference type
+		 */
+		difference_type operator-(const constIterator &other) const
+		{
+			return _curr - other._curr;
+		}
+
+		/**
+		 * @param other - some const-iterator
+		 * @return 1 if this._curr = other._curr, 0 otherwise
+		 */
+		bool operator==(const constIterator &other) const
+		{
+			return this->_curr == other._curr;
+		}
+
+		/**
+		 * @param other - some const iterator
+		 * @return 1 if this._curr != other._curr, 0 otherwise
+		 */
+		bool operator!=(const constIterator &other) const
+		{
+			return this->_curr != other._curr;
+		}
+
+		/**
+		 * @param other - some const iterator
+		 * @return 1 if this._curr < other._curr, 0 otherwise
+		 */
+		bool operator<(const constIterator &other) const
+		{
+			return this->_curr < other._curr;
+		}
+
+		/**
+		 * @param other - some const iterator
+		 * @return 1 if this._curr > other._curr, 0 otherwise
+		 */
+		bool operator>(const constIterator &other) const
+		{
+			return this->_curr > other._curr;
+		}
+
+		/**
+		 * @param other - some const iterator
+		 * @return 1 if this._curr <= other._curr, 0 otherwise
+		 */
+		bool operator<=(const constIterator &other) const
+		{
+			return this->_curr <= other._curr;
+		}
+
+		/**
+		 * @param other - some const iterator
+		 * @return 1 if this._curr >= other._curr, 0 otherwise
+		 */
+		bool operator>=(const constIterator &other) const
+		{
+			return this->_curr >= other._curr;
+		}
+
+
+
+
 
 	};
+
 
 public:
 	// to create instances of iterators outside the class:
