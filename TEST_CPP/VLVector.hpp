@@ -64,7 +64,7 @@ private:
 		}
 
 		/**
-		 * pre increment
+		 * pre increment (moves to next item)
 		 * @return iterator before ++ was performed
 		 */
 		Iterator operator++(int)
@@ -751,7 +751,49 @@ public:
 	 */
 	Iterator erase(const Iterator it)
 	{
-
+		int index = begin()-it;
+		if(_currSize>_staticCap+1) // meaning - removing one item doesnt mean going back to
+			// static (if the array is currently dynamically allocated)
+		{
+			if(_isDynamic)
+			{
+				for(int i=index;i<_currSize-1;i++)
+				{
+					_dynamicMemory[i] = _dynamicMemory[i+1];
+				}
+			}
+			else // static
+			{
+				for(int i=index;i<_currSize-1;i++)
+				{
+					_staticMemory[i] = _staticMemory[i+1];
+				}
+			}
+		}
+		else // removing an item means going back to static memory (if we're in dynamic alloc)
+		{
+			if(_isDynamic)
+			{ // we copy the first elements back to the static array
+				for(int i=0;i<index;i++)
+				{
+					_staticMemory[i] = _dynamicMemory[i];
+				}
+				// next we shift left from index onwards
+				for(int i=index;i<_currSize-1;i++)
+				{
+					_staticMemory[i] = _dynamicMemory[i+1];
+				}
+			}
+			else // static - we copy with a shift all elemtns
+			{
+				for(int i=index;i<_currSize-1;i++)
+				{
+					_staticMemory[i] = _staticMemory[i+1];
+				}
+			}
+		}
+		_currSize--;
+		return it;
 	}
 
 };
