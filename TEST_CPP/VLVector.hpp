@@ -686,7 +686,7 @@ public:
 	 */
 	Iterator begin()
 	{
-		return (_isDynamic) ? _dynamicMemory: _staticMemory;
+		return (_isDynamic) ? _dynamicMemory : _staticMemory;
 	}
 
 	/**
@@ -694,7 +694,7 @@ public:
 	 */
 	Iterator end()
 	{
-		return (_isDynamic) ? &_dynamicMemory[_currSize+1]:&_staticMemory[_currSize+1];
+		return (_isDynamic) ? &_dynamicMemory[_currSize + 1] : &_staticMemory[_currSize + 1];
 	}
 
 	/**
@@ -702,7 +702,7 @@ public:
 	 */
 	constIterator begin() const
 	{
-		return (_isDynamic) ? _dynamicMemory: _staticMemory;
+		return (_isDynamic) ? _dynamicMemory : _staticMemory;
 	}
 
 	/**
@@ -710,7 +710,7 @@ public:
  	*/
 	constIterator end() const
 	{
-		return (_isDynamic) ? &_dynamicMemory[_currSize+1]:&_staticMemory[_currSize+1];
+		return (_isDynamic) ? &_dynamicMemory[_currSize + 1] : &_staticMemory[_currSize + 1];
 	}
 
 
@@ -719,7 +719,7 @@ public:
 	 */
 	constIterator cbegin() const
 	{
-		return (_isDynamic) ? _dynamicMemory: _staticMemory;
+		return (_isDynamic) ? _dynamicMemory : _staticMemory;
 	}
 
 	/**
@@ -727,10 +727,23 @@ public:
 	 */
 	constIterator cend() const
 	{
-		return (_isDynamic) ? &_dynamicMemory[_currSize+1]:&_staticMemory[_currSize+1];
+		return (_isDynamic) ? &_dynamicMemory[_currSize + 1] : &_staticMemory[_currSize + 1];
 	}
 
-
+	/**
+	 * range based iteration
+	 * @param os - ostream
+	 * @param vlv -some VLVector
+	 * @return os
+	 */
+	friend std::ostream &operator<<(std::ostream &os, const VLVector& vlv)
+	{
+		for(const auto&it:vlv)
+		{
+			os<<it<<" ";
+		}
+		return os;
+	}
 	/**
 	 * erases the item pointed by it iterator
 	 * @param it - some vector iterator
