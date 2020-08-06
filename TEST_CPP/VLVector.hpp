@@ -736,14 +736,15 @@ public:
 	 * @param vlv -some VLVector
 	 * @return os
 	 */
-	friend std::ostream &operator<<(std::ostream &os, const VLVector& vlv)
+	friend std::ostream &operator<<(std::ostream &os, const VLVector &vlv)
 	{
-		for(const auto&it:vlv)
+		for (const auto &it:vlv)
 		{
-			os<<it<<" ";
+			os << it << " ";
 		}
 		return os;
 	}
+
 	/**
 	 * erases the item pointed by it iterator
 	 * @param it - some vector iterator
@@ -751,49 +752,112 @@ public:
 	 */
 	Iterator erase(const Iterator it)
 	{
-		int index = begin()-it;
-		if(_currSize>_staticCap+1) // meaning - removing one item doesnt mean going back to
+		int index = begin() - it;
+		if (_currSize > _staticCap + 1) // meaning - removing one item doesnt mean going back to
 			// static (if the array is currently dynamically allocated)
 		{
-			if(_isDynamic)
+			if (_isDynamic)
 			{
-				for(int i=index;i<_currSize-1;i++)
+				for (int i = index; i < _currSize - 1; i++)
 				{
-					_dynamicMemory[i] = _dynamicMemory[i+1];
+					_dynamicMemory[i] = _dynamicMemory[i + 1];
 				}
 			}
 			else // static
 			{
-				for(int i=index;i<_currSize-1;i++)
+				for (int i = index; i < _currSize - 1; i++)
 				{
-					_staticMemory[i] = _staticMemory[i+1];
+					_staticMemory[i] = _staticMemory[i + 1];
 				}
 			}
 		}
 		else // removing an item means going back to static memory (if we're in dynamic alloc)
 		{
-			if(_isDynamic)
+			if (_isDynamic)
 			{ // we copy the first elements back to the static array
-				for(int i=0;i<index;i++)
+				for (int i = 0; i < index; i++)
 				{
 					_staticMemory[i] = _dynamicMemory[i];
 				}
 				// next we shift left from index onwards
-				for(int i=index;i<_currSize-1;i++)
+				for (int i = index; i < _currSize - 1; i++)
 				{
-					_staticMemory[i] = _dynamicMemory[i+1];
+					_staticMemory[i] = _dynamicMemory[i + 1];
 				}
 			}
 			else // static - we copy with a shift all elemtns
 			{
-				for(int i=index;i<_currSize-1;i++)
+				for (int i = index; i < _currSize - 1; i++)
 				{
-					_staticMemory[i] = _staticMemory[i+1];
+					_staticMemory[i] = _staticMemory[i + 1];
 				}
 			}
 		}
 		_currSize--;
 		return it;
+	}
+
+	/**
+	 * erases all items between two iterators. ex:
+	 * before:
+	 * [1,2,3,4,5,6,7,8,9,10]
+	 *      ^         ^
+	 *     it1       it2
+	 * after:
+	 * [1,2,8,9,10]
+	 *        ^
+	 *      out_iter
+	 * @param it1,2 - some vector iterators
+	 * @return iterator pointing to the item to the right to the segment that had just been removed
+	 */
+	Iterator erase(const Iterator it1, const Iterator it2)
+	{
+		int index1 = begin() - it1;
+		int index2 = begin() - it2;
+		int size = index2 - index1;
+		if (_currSize > _staticCap + size) // meaning - removing size item doesnt mean going back to
+			// static (if the array is currently dynamically allocated)
+		{
+			if (_isDynamic)
+			{
+				for (int i = index1; i < _currSize - size; i++)
+				{
+					_dynamicMemory[i] = _dynamicMemory[i + size];
+				}
+			}
+			else // static
+			{
+				for (int i = index1; i < _currSize - size; i++)
+				{
+					_staticMemory[i] = _staticMemory[i + size];
+				}
+			}
+		}
+		else // removing an item means going back to static memory (if we're in dynamic alloc)
+		{
+			if (_isDynamic)
+			{ // we copy the first elements back to the static array
+				for (int i = 0; i < index1; i++)
+				{
+					_staticMemory[i] = _dynamicMemory[i];
+				}
+				// next we shift left from index1 onwards
+				for (int i = index1; i < _currSize - size; i++)
+				{
+					_staticMemory[i] = _dynamicMemory[i + size];
+				}
+			}
+			else // static - we copy with a shift all elemtns
+			{
+				for (int i = index1; i < _currSize - size; i++)
+				{
+					_staticMemory[i] = _staticMemory[i + size];
+				}
+			}
+		}
+		_currSize = _currSize - size;
+		return it2;
+
 	}
 
 };
