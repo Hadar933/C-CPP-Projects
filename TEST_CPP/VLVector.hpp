@@ -7,6 +7,7 @@
 
 #define DEFAULT_SIZE 16
 #define INITIAL_SIZE 0
+#define START 0
 #define OUT_OF_RANGE_MSG "index out of range"
 
 /**
@@ -362,17 +363,12 @@ private:
 		}
 
 
-
-
-
 	};
-
 
 public:
 	// to create instances of iterators outside the class:
 	typedef Iterator iterator;
 	typedef constIterator constIterator;
-
 
 	/**
 	 * default ctor
@@ -683,6 +679,66 @@ public:
 	bool operator!=(const VLVector &vec)
 	{
 		return !operator==(vec);
+	}
+
+	/**
+	 * @return the first element of the vector
+	 */
+	Iterator begin()
+	{
+		return (_isDynamic) ? _dynamicMemory: _staticMemory;
+	}
+
+	/**
+	 * @return one past the last element of the vector
+	 */
+	Iterator end()
+	{
+		return (_isDynamic) ? &_dynamicMemory[_currSize+1]:&_staticMemory[_currSize+1];
+	}
+
+	/**
+	 * @return the first element of the vector
+	 */
+	constIterator begin() const
+	{
+		return (_isDynamic) ? _dynamicMemory: _staticMemory;
+	}
+
+	/**
+ 	* @return one past the last element of the vector
+ 	*/
+	constIterator end() const
+	{
+		return (_isDynamic) ? &_dynamicMemory[_currSize+1]:&_staticMemory[_currSize+1];
+	}
+
+
+	/**
+	 * @return the first element of the vector
+	 */
+	constIterator cbegin() const
+	{
+		return (_isDynamic) ? _dynamicMemory: _staticMemory;
+	}
+
+	/**
+	 * @return one past the last element of the vector
+	 */
+	constIterator cend() const
+	{
+		return (_isDynamic) ? &_dynamicMemory[_currSize+1]:&_staticMemory[_currSize+1];
+	}
+
+
+	/**
+	 * erases the item pointed by it iterator
+	 * @param it - some vector iterator
+	 * @return iterator pointing to the item to the right to the item that had just been removed
+	 */
+	Iterator erase(const Iterator it)
+	{
+
 	}
 
 };
