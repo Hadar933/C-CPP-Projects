@@ -482,26 +482,28 @@ public:
 	/**
 	 * this helper function performs a loop over some index, and given two arrays
 	 * in order to shorten the functions (this loop occurs often)
-	 * @param array1 - array to copy to
-	 * @param array2 - array to copy from
+	 * @param toArray - array to copy to
+	 * @param fromArray - array to copy from
 	 * @param start - start index
 	 * @param end - end index
 	 * @param up - 1:loop increases ++ or 0: decreases --
+	 * @param adj1 - additional index manipulation
+	 * @param adj2 - additional index manipulation
 	 */
-	void _loopProcess(T* &array1, T* &array2, int start, int end, bool up)
+	void _loopProcess(T* &toArray, T* &fromArray, int start, int end, bool up, int adj1, int adj2)
 	{
 		if(up)
 		{
 			for(int i=start;i<end;i++)
 			{
-				array1[i] = array2[i];
+				toArray[i+adj1] = fromArray[i+adj2];
 			}
 		}
 		else // down
 		{
 			for(int i=start;i<end;i--)
 			{
-				array1[i] = array2[i];
+				toArray[i+adj1] = fromArray[i+adj2];
 			}
 		}
 
@@ -892,7 +894,8 @@ public:
 		int index = it - begin();
 		// case I - static memory,  enough room
 		if (_currSize + 1 <= _capacity && !_isDynamic)
-		{ // copying backwards so we wont repeat elements
+		{ // copying backwards so we wont repeat elements //TODO: add or remove loopProcess
+			//_loopProcess(_staticMemory,_staticMemory,_currSize-1,index-1,false,1,0)
 			for (int i = _currSize - 1; i > index - 1; i--)
 			{
 				_staticMemory[i + 1] = _staticMemory[i];
@@ -904,20 +907,22 @@ public:
 		{
 			_capacity = newCapacity();
 			_dynamicMemory = new T[_capacity];
+			//_loopProcess(_dynamicMemory,_staticMemory,0,index,true,0,0);
 			for(int i = 0; i<index; i++) // all elements up to index
 			{
 				_dynamicMemory[i] = _staticMemory[i];
 			}
+			//_loopProcess(_dynamicMemory,_staticMemory,index+1,_currSize,true,0,0);
 			for(int i = index+1; i<_currSize; i++) // all elements from index+1
 			{
 				_dynamicMemory[i] = _staticMemory[i];
 			}
 			_dynamicMemory[index] = item; // adding new item itself
-
 		}
 		// case III - dynamic memory, enough room
 		else if (_currSize<_capacity && _isDynamic)
 		{// copying backwards so we wont repeat elements
+			//_loopProcess(_dynamicMemory,_dynamicMemory,_currSize-1,index-1,false,1,0);
 			for (int i = _currSize - 1; i > index - 1; i--)
 			{
 				_dynamicMemory[i + 1] = _dynamicMemory[i];
@@ -929,10 +934,12 @@ public:
 		{
 			_capacity = newCapacity();
 			T *temp = new T[_capacity];
+			//_loopProcess(temp,_dynamicMemory,0,index,true,0,0);
 			for(int i = 0; i<index; i++) // all elements up to index
 			{
 				temp[i] = _dynamicMemory[i];
 			}
+			//_loopProcess(temp,_dynamicMemory,index+1,_currSize,true,0,0);
 			for(int i = index+1; i<_currSize; i++) // all elements from index+1
 			{
 				temp[i] = _dynamicMemory[i];
@@ -940,6 +947,7 @@ public:
 			temp[index] = item; // adding new item itself
 			delete[] _dynamicMemory;
 			_dynamicMemory = new T[_capacity];
+			//_loopProcess(_dynamicMemory,temp,0,_currSize+1,true,0,0);
 			for (int i = 0; i < _currSize + 1; i++)
 			{
 				_dynamicMemory[i] = temp[i];
