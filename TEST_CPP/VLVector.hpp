@@ -30,6 +30,13 @@ private:
 	private:
 		T *_curr;
 	public:
+		// iterator traits
+		typedef T value_type;
+		typedef T &reference;
+		typedef T *pointer;
+		typedef T difference_type;
+		typedef std::random_access_iterator_tag iterator_category;
+
 		/**
 		 * constructor for Iterator
 		 * @param curr - some value to use in initialization
@@ -38,9 +45,9 @@ private:
 		{}
 
 		/**
-		 * @return dereference
+		 * @return reference
 		 */
-		Iterator &operator*() const
+		reference operator*() const
 		{
 			return *_curr;
 		}
@@ -51,7 +58,8 @@ private:
 		 */
 		Iterator &operator++()
 		{
-			return _curr++;
+			_curr++;
+			*this;
 		}
 
 		/**
@@ -59,7 +67,7 @@ private:
 		 */
 		Iterator operator++(int)
 		{
-			Iterator temp = _curr;
+			Iterator temp = *this;
 			_curr++;
 			return temp;
 		}
@@ -70,7 +78,8 @@ private:
 		 */
 		Iterator &operator--()
 		{
-			return _curr--;
+			_curr--;
+			return *this;
 		}
 
 		/**
@@ -78,18 +87,53 @@ private:
 		 */
 		Iterator operator--(int)
 		{
-			Iterator temp = _curr;
+			Iterator temp = *this;
 			_curr--;
 			return temp;
 		}
 
 		/**
-		 * @param other some iterator
+		 * operator + that given some value of difference type,
+		 * returns a new Iterator, with value that is the sum of this iterator and val
+		 * @param val - some value to increment in
 		 * @return new iterator which is curr+other
 		 */
-		Iterator &operator+(const Iterator &other) const
+		Iterator &operator+(const difference_type &val) const
 		{
-			return Iterator(_curr + other._curr);
+			return Iterator(_curr + val);
+		}
+
+		/**
+		 * operator + that given some Iterator, advances this iterator by a factor
+		 * of the other value
+		 * @param other - some iterator
+		 * @return difference type
+		 */
+		difference_type operator+(const Iterator &other) const
+		{
+			return _curr + other._curr;
+		}
+
+		/**
+		 * operator - that given some value of difference type,
+		 * returns a new Iterator, with value that is the difference of this iterator and val
+		 * @param val - some value to increment in
+		 * @return new iterator which is curr-other
+		 */
+		Iterator &operator-(const difference_type &val) const
+		{
+			return Iterator(_curr - val);
+		}
+
+		/**
+		 * operator - that given some Iterator, advances this iterator by a factor
+		 * of the minus other value
+		 * @param other - some iterator
+		 * @return difference type
+		 */
+		difference_type operator-(const Iterator &other) const
+		{
+			return _curr - other._curr;
 		}
 
 		/**
@@ -157,9 +201,10 @@ private:
 	};
 
 public:
-	// to create instances of iterators outside of the class:
+	// to create instances of iterators outside the class:
 	typedef Iterator iterator;
 	typedef constIterator constIterator;
+
 
 	/**
 	 * default ctor
