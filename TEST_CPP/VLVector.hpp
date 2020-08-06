@@ -1,6 +1,7 @@
 #ifndef TEST_CPP_VLVECTOR_HPP
 #define TEST_CPP_VLVECTOR_HPP
 
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <stdexcept>
@@ -309,6 +310,26 @@ private:
 		}
 
 		/**
+		 * @param val - some value to add
+		 * @return pointer to this vec
+		 */
+		Iterator&operator+=(const difference_type& val)
+		{
+			_curr+=val;
+			return *this;
+		}
+
+		/**
+		 * @param val - some value to add
+		 * @return pointer to this vec
+		 */
+		Iterator&operator-=(const difference_type& val)
+		{
+			_curr-=val;
+			return *this;
+		}
+
+		/**
 		 * @param other - some const-iterator
 		 * @return 1 if this._curr = other._curr, 0 otherwise
 		 */
@@ -423,7 +444,7 @@ public:
 	/**
 	 * @return maximum amount of elements that can be inserted to the vector
 	 */
-	size_t getCapacity() const
+	size_t capacity() const
 	{
 		return _capacity;
 	}
@@ -431,7 +452,7 @@ public:
 	/**
 	 * @return current amount of items in the vector
 	 */
-	size_t getCurrSize() const
+	size_t size() const
 	{
 		return _currSize;
 	}
@@ -621,8 +642,11 @@ public:
 	{
 		if (this != &vec) // vec is not this
 		{
-			delete[] _dynamicMemory;
-			_dynamicMemory = nullptr;
+			if(_currSize!=INITIAL_SIZE)
+			{
+				delete[] _dynamicMemory;
+				_dynamicMemory = nullptr;
+			}
 			if (vec._isDynamic)
 			{
 				_dynamicMemory = new T[vec._capacity];
@@ -650,7 +674,7 @@ public:
 	 * @param i
 	 * @return i'th element of this vector
 	 */
-	T operator[](int i)
+	T& operator[](int i)
 	{
 		if (_isDynamic)
 		{
@@ -724,7 +748,7 @@ public:
 	 */
 	Iterator end()
 	{
-		return (_isDynamic) ? &_dynamicMemory[_currSize + 1] : &_staticMemory[_currSize + 1];
+		return (_isDynamic) ? &_dynamicMemory[_currSize] : &_staticMemory[_currSize];
 	}
 
 	/**
@@ -740,7 +764,7 @@ public:
  	*/
 	constIterator end() const
 	{
-		return (_isDynamic) ? &_dynamicMemory[_currSize + 1] : &_staticMemory[_currSize + 1];
+		return (_isDynamic) ? &_dynamicMemory[_currSize] : &_staticMemory[_currSize];
 	}
 
 
@@ -757,7 +781,7 @@ public:
 	 */
 	constIterator cend() const
 	{
-		return (_isDynamic) ? &_dynamicMemory[_currSize + 1] : &_staticMemory[_currSize + 1];
+		return (_isDynamic) ? &_dynamicMemory[_currSize] : &_staticMemory[_currSize];
 	}
 
 	/**
@@ -799,6 +823,7 @@ public:
 				{
 					_staticMemory[i] = _staticMemory[i + 1];
 				}
+				_isDynamic = false;
 			}
 		}
 		else // removing an item means going back to static memory (if we're in dynamic alloc)
@@ -815,6 +840,8 @@ public:
 					_staticMemory[i] = _dynamicMemory[i + 1];
 				}
 				delete[] _dynamicMemory;
+				_isDynamic = false;
+				_capacity = _staticCap;
 			}
 			else // static - we copy with a shift all elemtns
 			{
@@ -870,6 +897,8 @@ public:
 					_staticMemory[i] = _dynamicMemory[i + size];
 				}
 				delete[] _dynamicMemory;
+				_isDynamic = false;
+				_capacity = _staticCap;
 			}
 			else // static - we copy with a shift all elements
 			{
@@ -901,6 +930,7 @@ public:
 				_staticMemory[i + 1] = _staticMemory[i];
 			}
 			_staticMemory[index] = item;
+
 		}
 		// case II - static memory, not enough room
 		else if (_currSize + 1 > _capacity && !_isDynamic)
@@ -918,14 +948,16 @@ public:
 				_dynamicMemory[i] = _staticMemory[i];
 			}
 			_dynamicMemory[index] = item; // adding new item itself
+			_isDynamic = true;
 		}
 		// case III - dynamic memory, enough room
 		else if (_currSize<_capacity && _isDynamic)
 		{// copying backwards so we wont repeat elements
-			//_loopProcess(_dynamicMemory,_dynamicMemory,_currSize-1,index-1,false,1,0);
-			for (int i = _currSize - 1; i > index - 1; i--)
+			//_loopProcess(_dynamicMemory,_dynamicMemory,_currSize,index-1,false,1,0);
+			for (int i = _currSize; i > index - 1; i--) //TODO: this works so fix according to
+				// this loop if needed!
 			{
-				_dynamicMemory[i + 1] = _dynamicMemory[i];
+				_dynamicMemory[i] = _dynamicMemory[i-1];
 			}
 			_dynamicMemory[index] = item;
 		}
@@ -958,6 +990,7 @@ public:
 		{
 			_isDynamic = true;
 		}
+		return it; //TODO: this might not always be the case (for ex. if reallocation was made
 	}
 
 
@@ -965,3 +998,4 @@ public:
 
 
 #endif //TEST_CPP_VLVECTOR_HPP
+//TODO add const erase and insert

@@ -7,6 +7,8 @@
 #IncludeRegexTransform: 
 
 /cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/VLVector.hpp
+algorithm
+-
 cmath
 -
 cstdlib
@@ -17,6 +19,10 @@ stdexcept
 /cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/main.cpp
 iostream
 -
+vector
+-
 VLVector.hpp
 /cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/VLVector.hpp
+cassert
+-
 
