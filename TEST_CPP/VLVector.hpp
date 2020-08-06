@@ -28,21 +28,130 @@ private:
 	class Iterator
 	{
 	private:
-		T *curr;
+		T *_curr;
 	public:
 		/**
-		 * @return the current data
+		 * constructor for Iterator
+		 * @param curr - some value to use in initialization
+		 */
+		Iterator(T *curr) : _curr(curr)
+		{}
+
+		/**
+		 * @return dereference
 		 */
 		Iterator &operator*() const
 		{
-			return curr;
+			return *_curr;
 		}
+
+		/**
+		 * post increment
+		 * @return value ++
+		 */
+		Iterator &operator++()
+		{
+			return _curr++;
+		}
+
+		/**
+		 * pre increment
+		 */
+		Iterator operator++(int)
+		{
+			Iterator temp = _curr;
+			_curr++;
+			return temp;
+		}
+
+		/**
+		 * post decrement
+		 * @return value --
+		 */
+		Iterator &operator--()
+		{
+			return _curr--;
+		}
+
+		/**
+		 * pre decrement
+		 */
+		Iterator operator--(int)
+		{
+			Iterator temp = _curr;
+			_curr--;
+			return temp;
+		}
+
+		/**
+		 * @param other some iterator
+		 * @return new iterator which is curr+other
+		 */
+		Iterator &operator+(const Iterator &other) const
+		{
+			return Iterator(_curr + other._curr);
+		}
+
+		/**
+		 * @param other - some iterator
+		 * @return 1 if this._curr = other._curr, 0 otherwise
+		 */
+		bool operator==(const Iterator &other) const
+		{
+			return this->_curr == other._curr;
+		}
+
+		/**
+		 * @param other - some iterator
+		 * @return 1 if this._curr != other._curr, 0 otherwise
+		 */
+		bool operator!=(const Iterator &other) const
+		{
+			return this->_curr != other._curr;
+		}
+
+		/**
+		 * @param other - some iterator
+		 * @return 1 if this._curr < other._curr, 0 otherwise
+		 */
+		bool operator<(const Iterator &other) const
+		{
+			return this->_curr < other._curr;
+		}
+
+		/**
+		 * @param other - some iterator
+		 * @return 1 if this._curr > other._curr, 0 otherwise
+		 */
+		bool operator>(const Iterator &other) const
+		{
+			return this->_curr > other._curr;
+		}
+
+		/**
+		 * @param other - some iterator
+		 * @return 1 if this._curr <= other._curr, 0 otherwise
+		 */
+		bool operator<=(const Iterator &other) const
+		{
+			return this->_curr <= other._curr;
+		}
+
+		/**
+		 * @param other - some iterator
+		 * @return 1 if this._curr >= other._curr, 0 otherwise
+		 */
+		bool operator>=(const Iterator &other) const
+		{
+			return this->_curr >= other._curr;
+		}
+
 	};
 
 	class constIterator
 	{
 	private:
-		T* curr;
+		T *curr;
 	public:
 
 	};
