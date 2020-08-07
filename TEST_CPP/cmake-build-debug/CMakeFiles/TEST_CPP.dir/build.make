@@ -57,27 +57,27 @@ include CMakeFiles/TEST_CPP.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/TEST_CPP.dir/flags.make
 
-CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.o: CMakeFiles/TEST_CPP.dir/flags.make
-CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.o: ../PresubmissionTests.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.o -c "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/PresubmissionTests.cpp"
+CMakeFiles/TEST_CPP.dir/test.cpp.o: CMakeFiles/TEST_CPP.dir/flags.make
+CMakeFiles/TEST_CPP.dir/test.cpp.o: ../test.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/TEST_CPP.dir/test.cpp.o"
+	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TEST_CPP.dir/test.cpp.o -c "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/test.cpp"
 
-CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/PresubmissionTests.cpp" > CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.i
+CMakeFiles/TEST_CPP.dir/test.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TEST_CPP.dir/test.cpp.i"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/test.cpp" > CMakeFiles/TEST_CPP.dir/test.cpp.i
 
-CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/PresubmissionTests.cpp" -o CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.s
+CMakeFiles/TEST_CPP.dir/test.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TEST_CPP.dir/test.cpp.s"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/test.cpp" -o CMakeFiles/TEST_CPP.dir/test.cpp.s
 
 # Object files for target TEST_CPP
 TEST_CPP_OBJECTS = \
-"CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.o"
+"CMakeFiles/TEST_CPP.dir/test.cpp.o"
 
 # External object files for target TEST_CPP
 TEST_CPP_EXTERNAL_OBJECTS =
 
-TEST_CPP.exe: CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.o
+TEST_CPP.exe: CMakeFiles/TEST_CPP.dir/test.cpp.o
 TEST_CPP.exe: CMakeFiles/TEST_CPP.dir/build.make
 TEST_CPP.exe: CMakeFiles/TEST_CPP.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable TEST_CPP.exe"

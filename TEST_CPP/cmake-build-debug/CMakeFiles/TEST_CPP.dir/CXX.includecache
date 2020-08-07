@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/PresubmissionTests.cpp
-helpers/Presubmit.hpp
-/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/helpers/Presubmit.hpp
-
 /cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/VLVector.hpp
 algorithm
 -
@@ -20,27 +16,15 @@ cstdlib
 stdexcept
 -
 
-/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/helpers/Helpers.h
-cstdlib
--
-cstdio
--
-cstdint
--
-cinttypes
--
-cstring
--
-
-/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/helpers/Presubmit.hpp
-../VLVector.hpp
+/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/test.cpp
+VLVector.hpp
 /cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/VLVector.hpp
-Helpers.h
-/cygdrive/c/Users/hadar/Google Drive/year B/Semester B/C&C++/Exercises/TEST_CPP/helpers/Helpers.h
-iostream
--
 vector
 -
-algorithm
+random
+-
+fstream
+-
+iostream
 -
 

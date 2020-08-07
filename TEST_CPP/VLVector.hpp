@@ -8,7 +8,6 @@
 
 #define DEFAULT_SIZE 16
 #define INITIAL_SIZE 0
-#define START 0
 #define OUT_OF_RANGE_MSG "index out of range"
 
 /**
@@ -106,7 +105,7 @@ private:
 		 * @param val - some value to increment in
 		 * @return new iterator which is curr+other
 		 */
-		Iterator &operator+(const difference_type &val) const
+		Iterator operator+(const difference_type &val) const
 		{
 			return Iterator(_curr + val);
 		}
@@ -237,7 +236,7 @@ private:
 		constIterator &operator++()
 		{
 			_curr++;
-			*this;
+			return *this;
 		}
 
 		/**
@@ -436,7 +435,7 @@ public:
 	/**
 	 * @return - the static capacity of the vector
 	 */
-	size_t getStaticCap() const
+	size_t _getStaticCap() const
 	{
 		return _staticCap;
 	}
@@ -573,7 +572,7 @@ public:
 				{
 					_staticMemory[i] = _dynamicMemory[i];
 				}
-				free(_dynamicMemory);
+				delete[] _dynamicMemory;
 				_isDynamic = false;
 				_capacity = _staticCap;
 			}
@@ -835,7 +834,8 @@ public:
 		return it;
 	}
 
-	/** CONST VERSION
+	/**
+	 * CONST VERSION
 	 * erases the item pointed by it iterator
 	 * @param it - some vector iterator
 	 * @return iterator pointing to the item to the right to the item that had just been removed
@@ -890,7 +890,6 @@ public:
 		_currSize--;
 		return it;
 	}
-
 
 	/**
 	 * erases all items between two iterators.
@@ -949,7 +948,8 @@ public:
 		return it2;
 	}
 
-	/** CONST VERSION
+	/**
+	 * CONST VERSION
 	 * erases all items between two iterators.
 	 * @param it1,2 - some vector iterators
 	 * @return iterator pointing to the item to the right to the segment that had just been removed
@@ -1079,7 +1079,8 @@ public:
 		return it; //TODO: this might not always be the case (for ex. if reallocation was made
 	}
 
-	/**CONST VERSION
+	/**
+	 * CONST VERSION
 	 * inserts an item to a vector
 	 * @param it some iterator pointing to an item
 	 * @param item - new item to add to the vector
@@ -1179,11 +1180,11 @@ public:
 		{
 			_capacity = newCapacity();
 			_dynamicMemory = new T[_capacity];
-			for (size_t i = 0; i < index - size; i++) // all elements up to pos-size
+			for (size_t i = 0; i < index; i++) // all elements up to pos-size
 			{
 				_dynamicMemory[i] = _staticMemory[i];
 			}
-			for (size_t i = index + 1; i < _currSize; i++) // all elements from pos+1
+			for (size_t i = index + size; i < _currSize; i++) // all elements from pos+1
 			{
 				_dynamicMemory[i] = _staticMemory[i];
 			}
@@ -1230,17 +1231,18 @@ public:
 		return pos;
 	}
 
-	/**CONST VERSION
- * given some container, with two iterators t1 and t2, pointing to elements in the container
- * insert all elements before pos in this vector
- * @param it1 - some iterator
- * @param it2 - some iterator
- * @param pos - position to insert values
- * @return iterator pointing to the first item we've added
- */
+	/**
+	 * CONST VERSION
+	 * given some container, with two iterators t1 and t2, pointing to elements in the container
+	 * insert all elements before pos in this vector
+	 * @param it1 - some iterator
+	 * @param it2 - some iterator
+	 * @param pos - position to insert values
+	 * @return iterator pointing to the first item we've added
+	 */
 	template<class InputIterator>
-	constIterator insert(const constIterator &pos, const InputIterator &it1, const InputIterator
-	&it2)
+	constIterator insert(const constIterator &pos, const InputIterator &it1,
+						 const InputIterator &it2)
 	{
 		size_t size = it2 - it1;
 		size_t index = pos - cbegin();
@@ -1330,4 +1332,3 @@ public:
 
 
 #endif //TEST_CPP_VLVECTOR_HPP
-//TODO add const erase and insert
