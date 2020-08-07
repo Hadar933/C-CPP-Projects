@@ -947,7 +947,7 @@ public:
 			_dynamicMemory[index] = item; // adding new item itself
 			_isDynamic = true;
 		}
-			// case III - dynamic memory, enough room
+		// case III - dynamic memory, enough room
 		else if (_currSize < _capacity && _isDynamic)
 		{// copying backwards so we wont repeat elements
 			//_loopProcess(_dynamicMemory,_dynamicMemory,_currSize,index-1,false,1,0);
@@ -991,7 +991,8 @@ public:
 	}
 
 	/**
-	 * inserts all values in between it1 - it2 before the pos value
+	 * given some container, with two iterators t1 and t2, pointing to elements in the container
+	 * insert all elements before pos in this vector
 	 * @param it1 - some iterator
 	 * @param it2 - some iterator
 	 * @param pos - position to insert values
@@ -1000,9 +1001,69 @@ public:
 	template<class InputIterator>
 	Iterator insert(const InputIterator &it1, const InputIterator &it2, const Iterator &pos)
 	{
-		int size = it2-it1;
-		int start = pos-size;
-		int end = pos;
+		int size = it2 - it1;
+		// case I - static memory,  enough room
+		if (_currSize + size <= _capacity && !_isDynamic)
+		{
+			for (int i = pos; i > pos - size; i--) //shifting left to make room
+			{
+				_staticMemory[i + size] = _staticMemory[i];
+			}
+			std::copy(it1,it2,pos); // now adding items in between
+		}
+		// case II - static memory, not enough room
+		else if (_currSize + size > _capacity && !_isDynamic)
+		{
+			_capacity = newCapacity();
+			_dynamicMemory = new T[_capacity];
+			for (int i = 0; i < pos-size; i++) // all elements up to pos-size
+			{
+				_dynamicMemory[i] = _staticMemory[i];
+			}
+			for (int i = pos + 1; i < _currSize; i++) // all elements from pos+1
+			{
+				_dynamicMemory[i] = _staticMemory[i];
+			}
+			std::copy(it1,it2,pos); // now adding items in between
+		}
+		// case III - dynamic memory, enough room
+		else if (_currSize < _capacity && _isDynamic)
+		{
+			for (int i = pos; i > pos - size; i--) //shifting left to make room
+			{
+				_dynamicMemory[i + size] = _dynamicMemory[i];
+			}
+			std::copy(it1,it2,pos); // now adding items in between
+		}
+		// case IV - dynamic memory, not enough room
+		else if (_currSize >= _capacity && _isDynamic)
+		{
+			_capacity = newCapacity();
+			T *temp = new T[_capacity];
+			//_loopProcess(temp,_dynamicMemory,0,index,true,0,0);
+			for (int i = 0; i < pos-size; i++) // all elements up to pos-size
+			{
+				temp[i] = _dynamicMemory[i];
+			}
+			//_loopProcess(temp,_dynamicMemory,index+1,_currSize,true,0,0);
+			for (int i = pos + 1; i < _currSize; i++) // all elements from pos+1
+			{
+				temp[i] = _dynamicMemory[i];
+			}
+			std::copy(it1,it2,temp[pos-size]); // now adding items in between
+			delete[] _dynamicMemory;
+			_dynamicMemory = new T[_capacity];
+			//_loopProcess(_dynamicMemory,temp,0,_currSize+1,true,0,0);
+			for (int i = 0; i < _currSize + 1; i++)
+			{
+				_dynamicMemory[i] = temp[i];
+			}
+		}
+		_currSize = _currSize + size;
+		if (_currSize > _staticCap && !_isDynamic) // this means we need to change to dynamic memory
+		{
+			_isDynamic = true;
+		}
 	}
 
 	/**
