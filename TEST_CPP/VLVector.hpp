@@ -423,7 +423,11 @@ public:
 	 */
 	~VLVector()
 	{
-		delete[] _dynamicMemory;
+		if(_currSize!=INITIAL_SIZE)
+		{
+			delete[] _dynamicMemory;
+		}
+
 	}
 	/**
 	 * @return 1 - the current memory usage is dynamic. 0 - static
