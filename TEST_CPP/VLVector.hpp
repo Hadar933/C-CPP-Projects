@@ -61,7 +61,7 @@ private:
 		Iterator &operator++()
 		{
 			_curr++;
-			*this;
+			return *this;
 		}
 
 		/**
@@ -408,22 +408,15 @@ public:
 		_capacity = vec._staticCap;
 		_currSize = INITIAL_SIZE;
 		_isDynamic = vec._isDynamic;
-		*this->operator=(vec);
-
+		*this=(vec);
 	}
-
-	/**
-	 * @tparam InputIterator - segment [first,last) of T values
-	 * @param first
-	 * @param last
-	 */
 
 	/**
 	 * destructor for class VLVector - frees _vec from memory
 	 */
 	~VLVector()
 	{
-		if(_currSize!=INITIAL_SIZE)
+		if (_currSize != INITIAL_SIZE)
 		{
 			delete[] _dynamicMemory;
 		}
@@ -470,7 +463,7 @@ public:
 	 * @param index - some index (might be out of range)
 	 * @return - object T representing vtv[i]
 	 */
-	T at(const int index) const
+	T at(const size_t index) const
 	{
 		if (index < INITIAL_SIZE || index > _currSize) // invalid index
 		{
@@ -549,7 +542,7 @@ public:
 		{
 			_capacity = newCapacity();
 			_dynamicMemory = new T[_capacity];
-			for (int i = 0; i < _currSize; i++) // now copying from static to dynamic
+			for (size_t i = 0; i < _currSize; i++) // now copying from static to dynamic
 			{
 				_dynamicMemory[i] = _staticMemory[i];
 			}
@@ -568,14 +561,14 @@ public:
 		{
 			_capacity = newCapacity();
 			T *temp = new T[_capacity];
-			for (int i = 0; i < _currSize; i++)
+			for (size_t i = 0; i < _currSize; i++)
 			{
 				temp[i] = _dynamicMemory[i];
 			}
 			temp[_currSize] = item;
 			delete[] _dynamicMemory;
 			_dynamicMemory = new T[_capacity];
-			for (int i = 0; i < _currSize + 1; i++)
+			for (size_t i = 0; i < _currSize + 1; i++)
 			{
 				_dynamicMemory[i] = temp[i];
 			}
@@ -597,9 +590,9 @@ public:
 		if (!empty())
 		{
 			_currSize--;
-			if (_currSize <= getStaticCap()) // if so - we need to go back to static
+			if (_currSize <= _staticCap && _isDynamic) // if so - we need to go back to static
 			{
-				for (int i = 0; i++; i < _currSize)
+				for (size_t i = 0; i < _currSize; i++)
 				{
 					_staticMemory[i] = _dynamicMemory[i];
 				}
@@ -652,14 +645,14 @@ public:
 			if (vec._isDynamic)
 			{
 				_dynamicMemory = new T[vec._capacity];
-				for (int i = 0; i < vec._currSize; i++)
+				for (size_t i = 0; i < vec._currSize; i++)
 				{
 					_dynamicMemory[i] = vec._dynamicMemory[i];
 				}
 			}
 			else // vec is static
 			{
-				for (int i = 0; i < vec._currSize; i++)
+				for (size_t i = 0; i < vec._currSize; i++)
 				{
 					_staticMemory[i] = vec._staticMemory[i];
 				}
@@ -707,7 +700,7 @@ public:
 	{
 		if (_isDynamic)
 		{
-			for (int i = 0; i < _currSize; i++)
+			for (size_t i = 0; i < _currSize; i++)
 			{
 				if (_dynamicMemory[i] != vec._dynamicMemory[i])
 				{
@@ -717,7 +710,7 @@ public:
 		}
 		else
 		{
-			for (int i = 0; i < _currSize; i++)
+			for (size_t i = 0; i < _currSize; i++)
 			{
 				if (_staticMemory[i] != vec._staticMemory[i])
 				{
@@ -808,20 +801,20 @@ public:
 	 */
 	Iterator erase(const Iterator &it)
 	{
-		int index = it - begin();
+		size_t index = it - begin();
 		if (_currSize > _staticCap + 1) // meaning - removing one item doesnt mean going back to
 			// static (if the array is currently dynamically allocated)
 		{
 			if (_isDynamic)
 			{
-				for (int i = index; i < _currSize - 1; i++)
+				for (size_t i = index; i < _currSize - 1; i++)
 				{
 					_dynamicMemory[i] = _dynamicMemory[i + 1];
 				}
 			}
 			else // static
 			{
-				for (int i = index; i < _currSize - 1; i++)
+				for (size_t i = index; i < _currSize - 1; i++)
 				{
 					_staticMemory[i] = _staticMemory[i + 1];
 				}
@@ -832,12 +825,12 @@ public:
 		{
 			if (_isDynamic)
 			{ // we copy the first elements back to the static array
-				for (int i = 0; i < index; i++)
+				for (size_t i = 0; i < index; i++)
 				{
 					_staticMemory[i] = _dynamicMemory[i];
 				}
 				// next we shift left from index onwards
-				for (int i = index; i < _currSize - 1; i++)
+				for (size_t i = index; i < _currSize - 1; i++)
 				{
 					_staticMemory[i] = _dynamicMemory[i + 1];
 				}
@@ -847,7 +840,7 @@ public:
 			}
 			else // static - we copy with a shift all elemtns
 			{
-				for (int i = index; i < _currSize - 1; i++)
+				for (size_t i = index; i < _currSize - 1; i++)
 				{
 					_staticMemory[i] = _staticMemory[i + 1];
 				}
@@ -872,14 +865,14 @@ public:
 		{
 			if (_isDynamic)
 			{
-				for (int i = index1; i < _currSize - size; i++)
+				for (size_t i = index1; i < _currSize - size; i++)
 				{
 					_dynamicMemory[i] = _dynamicMemory[i + size];
 				}
 			}
 			else // static
 			{
-				for (int i = index1; i < _currSize - size; i++)
+				for (size_t i = index1; i < _currSize - size; i++)
 				{
 					_staticMemory[i] = _staticMemory[i + size];
 				}
@@ -889,12 +882,12 @@ public:
 		{
 			if (_isDynamic)
 			{ // we copy the first elements back to the static array
-				for (int i = 0; i < index1; i++)
+				for (size_t i = 0; i < index1; i++)
 				{
 					_staticMemory[i] = _dynamicMemory[i];
 				}
 				// next we shift left from index1 onwards
-				for (int i = index1; i < _currSize - size; i++)
+				for (size_t i = index1; i < _currSize - size; i++)
 				{
 					_staticMemory[i] = _dynamicMemory[i + size];
 				}
@@ -904,7 +897,7 @@ public:
 			}
 			else // static - we copy with a shift all elements
 			{
-				for (int i = index1; i < _currSize - size; i++)
+				for (size_t i = index1; i < _currSize - size; i++)
 				{
 					_staticMemory[i] = _staticMemory[i + size];
 				}
@@ -922,12 +915,12 @@ public:
 	 */
 	Iterator insert(const Iterator &it, const T &item)
 	{
-		int index = it - begin();
+		size_t index = it - begin();
 		// case I - static memory,  enough room
 		if (_currSize + 1 <= _capacity && !_isDynamic)
 		{ // copying backwards so we wont repeat elements //TODO: add or remove loopProcess
 			//_loopProcess(_staticMemory,_staticMemory,_currSize-1,index-1,false,1,0)
-			for (int i = _currSize; i > index - 1; i--)
+			for (size_t i = _currSize; i > index - 1; i--)
 			{
 				_staticMemory[i + 1] = _staticMemory[i];
 			}
@@ -939,23 +932,23 @@ public:
 			_capacity = newCapacity();
 			_dynamicMemory = new T[_capacity];
 			//_loopProcess(_dynamicMemory,_staticMemory,0,index,true,0,0);
-			for (int i = 0; i < index; i++) // all elements up to index
+			for (size_t i = 0; i < index; i++) // all elements up to index
 			{
 				_dynamicMemory[i] = _staticMemory[i];
 			}
 			//_loopProcess(_dynamicMemory,_staticMemory,index+1,_currSize,true,0,0);
-			for (int i = index + 1; i < _currSize; i++) // all elements from index+1
+			for (size_t i = index + 1; i < _currSize; i++) // all elements from index+1
 			{
 				_dynamicMemory[i] = _staticMemory[i];
 			}
 			_dynamicMemory[index] = item; // adding new item itself
 			_isDynamic = true;
 		}
-		// case III - dynamic memory, enough room
+			// case III - dynamic memory, enough room
 		else if (_currSize < _capacity && _isDynamic)
 		{// copying backwards so we wont repeat elements
 			//_loopProcess(_dynamicMemory,_dynamicMemory,_currSize,index-1,false,1,0);
-			for (int i = _currSize;
+			for (size_t i = _currSize;
 				 i > index - 1; i--) //TODO: this works so fix according to this loop if needed!
 			{
 				_dynamicMemory[i] = _dynamicMemory[i - 1];
@@ -968,12 +961,12 @@ public:
 			_capacity = newCapacity();
 			T *temp = new T[_capacity];
 			//_loopProcess(temp,_dynamicMemory,0,index,true,0,0);
-			for (int i = 0; i < index; i++) // all elements up to index
+			for (size_t i = 0; i < index; i++) // all elements up to index
 			{
 				temp[i] = _dynamicMemory[i];
 			}
 			//_loopProcess(temp,_dynamicMemory,index+1,_currSize,true,0,0);
-			for (int i = index + 1; i < _currSize; i++) // all elements from index+1
+			for (size_t i = index + 1; i < _currSize; i++) // all elements from index+1
 			{
 				temp[i] = _dynamicMemory[i];
 			}
@@ -981,7 +974,7 @@ public:
 			delete[] _dynamicMemory;
 			_dynamicMemory = new T[_capacity];
 			//_loopProcess(_dynamicMemory,temp,0,_currSize+1,true,0,0);
-			for (int i = 0; i < _currSize + 1; i++)
+			for (size_t i = 0; i < _currSize + 1; i++)
 			{
 				_dynamicMemory[i] = temp[i];
 			}
@@ -1009,56 +1002,56 @@ public:
 		// case I - static memory,  enough room
 		if (_currSize + size <= _capacity && !_isDynamic)
 		{
-			for (int i = pos; i > pos - size; i--) //shifting left to make room
+			for (size_t i = pos; i > pos - size; i--) //shifting left to make room
 			{
 				_staticMemory[i + size] = _staticMemory[i];
 			}
-			std::copy(it1,it2,pos); // now adding items in between
+			std::copy(it1, it2, pos); // now adding items in between
 		}
-		// case II - static memory, not enough room
+			// case II - static memory, not enough room
 		else if (_currSize + size > _capacity && !_isDynamic)
 		{
 			_capacity = newCapacity();
 			_dynamicMemory = new T[_capacity];
-			for (int i = 0; i < pos-size; i++) // all elements up to pos-size
+			for (size_t i = 0; i < pos - size; i++) // all elements up to pos-size
 			{
 				_dynamicMemory[i] = _staticMemory[i];
 			}
-			for (int i = pos + 1; i < _currSize; i++) // all elements from pos+1
+			for (size_t i = pos + 1; i < _currSize; i++) // all elements from pos+1
 			{
 				_dynamicMemory[i] = _staticMemory[i];
 			}
-			std::copy(it1,it2,pos); // now adding items in between
+			std::copy(it1, it2, pos); // now adding items in between
 		}
-		// case III - dynamic memory, enough room
+			// case III - dynamic memory, enough room
 		else if (_currSize < _capacity && _isDynamic)
 		{
-			for (int i = pos; i > pos - size; i--) //shifting left to make room
+			for (size_t i = pos; i > pos - size; i--) //shifting left to make room
 			{
 				_dynamicMemory[i + size] = _dynamicMemory[i];
 			}
-			std::copy(it1,it2,pos); // now adding items in between
+			std::copy(it1, it2, pos); // now adding items in between
 		}
-		// case IV - dynamic memory, not enough room
+			// case IV - dynamic memory, not enough room
 		else if (_currSize >= _capacity && _isDynamic)
 		{
 			_capacity = newCapacity();
 			T *temp = new T[_capacity];
 			//_loopProcess(temp,_dynamicMemory,0,index,true,0,0);
-			for (int i = 0; i < pos-size; i++) // all elements up to pos-size
+			for (size_t i = 0; i < pos - size; i++) // all elements up to pos-size
 			{
 				temp[i] = _dynamicMemory[i];
 			}
 			//_loopProcess(temp,_dynamicMemory,index+1,_currSize,true,0,0);
-			for (int i = pos + 1; i < _currSize; i++) // all elements from pos+1
+			for (size_t i = pos + 1; i < _currSize; i++) // all elements from pos+1
 			{
 				temp[i] = _dynamicMemory[i];
 			}
-			std::copy(it1,it2,temp[pos-size]); // now adding items in between
+			std::copy(it1, it2, temp[pos - size]); // now adding items in between
 			delete[] _dynamicMemory;
 			_dynamicMemory = new T[_capacity];
 			//_loopProcess(_dynamicMemory,temp,0,_currSize+1,true,0,0);
-			for (int i = 0; i < _currSize + 1; i++)
+			for (size_t i = 0; i < _currSize + 1; i++)
 			{
 				_dynamicMemory[i] = temp[i];
 			}
@@ -1073,8 +1066,8 @@ public:
 	/**
 	 * constructor of vector using iterator
 	 * @tparam InputIterator - some input iterator which values will be inserted to a new vector
-	 * @param first - first index
-	 * @param last - last index
+	 * @param first - iterator pointing to first index
+	 * @param last - iterator pointing to last index
 	 */
 	template<class InputIterator>
 	VLVector(InputIterator &first, InputIterator &last):
@@ -1083,7 +1076,6 @@ public:
 	{
 		insert(first, last, begin());
 	}
-
 
 };
 
