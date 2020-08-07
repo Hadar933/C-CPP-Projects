@@ -26,7 +26,11 @@ private:
 	size_t _capacity; // current maximum amount of elements that can be inserted to the vector
 	size_t _currSize; // current amount of items in the vector
 	bool _isDynamic; // boolean representing if were working on static or dynamic memory
+	T *_staticPtr = _staticMemory; // will come handy when using iterator
 
+	/**
+	 * class representing iterator
+	 */
 	class Iterator
 	{
 	private:
@@ -36,7 +40,7 @@ private:
 		typedef T value_type;
 		typedef T &reference;
 		typedef T *pointer;
-		typedef T difference_type;
+		typedef int difference_type;
 		typedef std::random_access_iterator_tag iterator_category;
 
 		/**
@@ -124,7 +128,7 @@ private:
 		 * @param val - some value to increment in
 		 * @return new iterator which is curr-other
 		 */
-		Iterator &operator-(const difference_type &val) const
+		Iterator operator-(const difference_type &val) const
 		{
 			return Iterator(_curr - val);
 		}
@@ -196,6 +200,9 @@ private:
 
 	};
 
+	/**
+	 * class for iterating over constant values
+	 */
 	class constIterator
 	{
 	private:
@@ -203,9 +210,9 @@ private:
 	public:
 		// iterator traits
 		typedef T value_type;
-		typedef T &reference;
-		typedef T *pointer;
-		typedef T difference_type;
+		typedef const T &reference;
+		typedef const T *pointer;
+		typedef int difference_type;
 		typedef std::random_access_iterator_tag iterator_category;
 
 		/**
@@ -408,7 +415,7 @@ public:
 		_capacity = vec._staticCap;
 		_currSize = INITIAL_SIZE;
 		_isDynamic = vec._isDynamic;
-		*this=(vec);
+		*this = (vec);
 	}
 
 	/**
@@ -416,7 +423,7 @@ public:
 	 */
 	~VLVector()
 	{
-		if (_currSize != INITIAL_SIZE)
+		if (_currSize != INITIAL_SIZE && _isDynamic)
 		{
 			delete[] _dynamicMemory;
 		}
@@ -492,36 +499,6 @@ public:
 		return floor(3 * (_currSize + 1) / 2);
 	}
 
-
-	/**
-	 * this helper function performs a loop over some index, and given two arrays
-	 * in order to shorten the functions (this loop occurs often)
-	 * @param toArray - array to copy to
-	 * @param fromArray - array to copy from
-	 * @param start - start index
-	 * @param end - end index
-	 * @param up - 1:loop increases ++ or 0: decreases --
-	 * @param adj1 - additional index manipulation
-	 * @param adj2 - additional index manipulation
-	 */
-	void _loopProcess(T *&toArray, T *&fromArray, int start, int end, bool up, int adj1, int adj2)
-	{
-		if (up)
-		{
-			for (int i = start; i < end; i++)
-			{
-				toArray[i + adj1] = fromArray[i + adj2];
-			}
-		}
-		else // down
-		{
-			for (int i = start; i < end; i--)
-			{
-				toArray[i + adj1] = fromArray[i + adj2];
-			}
-		}
-
-	}
 
 	/**
 	 * gets an item of generic type T and adds it the the end of the vector
@@ -768,7 +745,11 @@ public:
 	 */
 	constIterator cbegin() const
 	{
-		return (_isDynamic) ? _dynamicMemory : _staticMemory;
+		if (_isDynamic)
+		{
+			return constIterator(this->_dynamicMemory);
+		}
+		return constIterator(_staticPtr);
 	}
 
 	/**
@@ -776,7 +757,11 @@ public:
 	 */
 	constIterator cend() const
 	{
-		return (_isDynamic) ? &_dynamicMemory[_currSize] : &_staticMemory[_currSize];
+		if (_isDynamic)
+		{
+			return constIterator(&(this->_dynamicMemory[_currSize]));
+		}
+		return constIterator(&(this->_staticPtr[_currSize]));
 	}
 
 	/**
@@ -850,6 +835,63 @@ public:
 		return it;
 	}
 
+	/** CONST VERSION
+	 * erases the item pointed by it iterator
+	 * @param it - some vector iterator
+	 * @return iterator pointing to the item to the right to the item that had just been removed
+	 */
+	constIterator erase(const constIterator &it)
+	{
+		size_t index = it - begin();
+		if (_currSize > _staticCap + 1) // meaning - removing one item doesnt mean going back to
+			// static (if the array is currently dynamically allocated)
+		{
+			if (_isDynamic)
+			{
+				for (size_t i = index; i < _currSize - 1; i++)
+				{
+					_dynamicMemory[i] = _dynamicMemory[i + 1];
+				}
+			}
+			else // static
+			{
+				for (size_t i = index; i < _currSize - 1; i++)
+				{
+					_staticMemory[i] = _staticMemory[i + 1];
+				}
+				_isDynamic = false;
+			}
+		}
+		else // removing an item means going back to static memory (if we're in dynamic alloc)
+		{
+			if (_isDynamic)
+			{ // we copy the first elements back to the static array
+				for (size_t i = 0; i < index; i++)
+				{
+					_staticMemory[i] = _dynamicMemory[i];
+				}
+				// next we shift left from index onwards
+				for (size_t i = index; i < _currSize - 1; i++)
+				{
+					_staticMemory[i] = _dynamicMemory[i + 1];
+				}
+				delete[] _dynamicMemory;
+				_isDynamic = false;
+				_capacity = _staticCap;
+			}
+			else // static - we copy with a shift all elemtns
+			{
+				for (size_t i = index; i < _currSize - 1; i++)
+				{
+					_staticMemory[i] = _staticMemory[i + 1];
+				}
+			}
+		}
+		_currSize--;
+		return it;
+	}
+
+
 	/**
 	 * erases all items between two iterators.
 	 * @param it1,2 - some vector iterators
@@ -859,6 +901,63 @@ public:
 	{
 		int index1 = it1 - begin();
 		int index2 = it2 - begin();
+		int size = index2 - index1;
+		if (_currSize > _staticCap + size) // meaning - removing size item doesnt mean going back to
+			// static (if the array is currently dynamically allocated)
+		{
+			if (_isDynamic)
+			{
+				for (size_t i = index1; i < _currSize - size; i++)
+				{
+					_dynamicMemory[i] = _dynamicMemory[i + size];
+				}
+			}
+			else // static
+			{
+				for (size_t i = index1; i < _currSize - size; i++)
+				{
+					_staticMemory[i] = _staticMemory[i + size];
+				}
+			}
+		}
+		else // removing items means going back to static memory (if we're in dynamic alloc)
+		{
+			if (_isDynamic)
+			{ // we copy the first elements back to the static array
+				for (size_t i = 0; i < index1; i++)
+				{
+					_staticMemory[i] = _dynamicMemory[i];
+				}
+				// next we shift left from index1 onwards
+				for (size_t i = index1; i < _currSize - size; i++)
+				{
+					_staticMemory[i] = _dynamicMemory[i + size];
+				}
+				delete[] _dynamicMemory;
+				_isDynamic = false;
+				_capacity = _staticCap;
+			}
+			else // static - we copy with a shift all elements
+			{
+				for (size_t i = index1; i < _currSize - size; i++)
+				{
+					_staticMemory[i] = _staticMemory[i + size];
+				}
+			}
+		}
+		_currSize = _currSize - size;
+		return it2;
+	}
+
+	/** CONST VERSION
+	 * erases all items between two iterators.
+	 * @param it1,2 - some vector iterators
+	 * @return iterator pointing to the item to the right to the segment that had just been removed
+	 */
+	constIterator erase(const constIterator &it1, const constIterator &it2)
+	{
+		int index1 = it1 - cbegin();
+		int index2 = it2 - cbegin();
 		int size = index2 - index1;
 		if (_currSize > _staticCap + size) // meaning - removing size item doesnt mean going back to
 			// static (if the array is currently dynamically allocated)
@@ -918,8 +1017,7 @@ public:
 		size_t index = it - begin();
 		// case I - static memory,  enough room
 		if (_currSize + 1 <= _capacity && !_isDynamic)
-		{ // copying backwards so we wont repeat elements //TODO: add or remove loopProcess
-			//_loopProcess(_staticMemory,_staticMemory,_currSize-1,index-1,false,1,0)
+		{ // copying backwards so we wont repeat elements
 			for (size_t i = _currSize; i > index - 1; i--)
 			{
 				_staticMemory[i + 1] = _staticMemory[i];
@@ -931,12 +1029,10 @@ public:
 		{
 			_capacity = newCapacity();
 			_dynamicMemory = new T[_capacity];
-			//_loopProcess(_dynamicMemory,_staticMemory,0,index,true,0,0);
 			for (size_t i = 0; i < index; i++) // all elements up to index
 			{
 				_dynamicMemory[i] = _staticMemory[i];
 			}
-			//_loopProcess(_dynamicMemory,_staticMemory,index+1,_currSize,true,0,0);
 			for (size_t i = index + 1; i < _currSize; i++) // all elements from index+1
 			{
 				_dynamicMemory[i] = _staticMemory[i];
@@ -947,9 +1043,8 @@ public:
 			// case III - dynamic memory, enough room
 		else if (_currSize < _capacity && _isDynamic)
 		{// copying backwards so we wont repeat elements
-			//_loopProcess(_dynamicMemory,_dynamicMemory,_currSize,index-1,false,1,0);
 			for (size_t i = _currSize;
-				 i > index - 1; i--) //TODO: this works so fix according to this loop if needed!
+				 i > index - 1; i--)
 			{
 				_dynamicMemory[i] = _dynamicMemory[i - 1];
 			}
@@ -960,12 +1055,10 @@ public:
 		{
 			_capacity = newCapacity();
 			T *temp = new T[_capacity];
-			//_loopProcess(temp,_dynamicMemory,0,index,true,0,0);
 			for (size_t i = 0; i < index; i++) // all elements up to index
 			{
 				temp[i] = _dynamicMemory[i];
 			}
-			//_loopProcess(temp,_dynamicMemory,index+1,_currSize,true,0,0);
 			for (size_t i = index + 1; i < _currSize; i++) // all elements from index+1
 			{
 				temp[i] = _dynamicMemory[i];
@@ -973,7 +1066,79 @@ public:
 			temp[index] = item; // adding new item itself
 			delete[] _dynamicMemory;
 			_dynamicMemory = new T[_capacity];
-			//_loopProcess(_dynamicMemory,temp,0,_currSize+1,true,0,0);
+			for (size_t i = 0; i < _currSize + 1; i++)
+			{
+				_dynamicMemory[i] = temp[i];
+			}
+		}
+		_currSize++;
+		if (_currSize > _staticCap && !_isDynamic) // this means we need to change to dynamic memory
+		{
+			_isDynamic = true;
+		}
+		return it; //TODO: this might not always be the case (for ex. if reallocation was made
+	}
+
+	/**CONST VERSION
+	 * inserts an item to a vector
+	 * @param it some iterator pointing to an item
+	 * @param item - new item to add to the vector
+	 * @return iterator pointing to item
+	 */
+	constIterator insert(const constIterator &it, const T &item)
+	{
+		size_t index = it - cbegin();
+		// case I - static memory,  enough room
+		if (_currSize + 1 <= _capacity && !_isDynamic)
+		{ // copying backwards so we wont repeat elements
+			for (size_t i = _currSize; i > index - 1; i--)
+			{
+				_staticMemory[i + 1] = _staticMemory[i];
+			}
+			_staticMemory[index] = item;
+		}
+			// case II - static memory, not enough room
+		else if (_currSize + 1 > _capacity && !_isDynamic)
+		{
+			_capacity = newCapacity();
+			_dynamicMemory = new T[_capacity];
+			for (size_t i = 0; i < index; i++) // all elements up to index
+			{
+				_dynamicMemory[i] = _staticMemory[i];
+			}
+			for (size_t i = index + 1; i < _currSize; i++) // all elements from index+1
+			{
+				_dynamicMemory[i] = _staticMemory[i];
+			}
+			_dynamicMemory[index] = item; // adding new item itself
+			_isDynamic = true;
+		}
+			// case III - dynamic memory, enough room
+		else if (_currSize < _capacity && _isDynamic)
+		{// copying backwards so we wont repeat elements
+			for (size_t i = _currSize;
+				 i > index - 1; i--)
+			{
+				_dynamicMemory[i] = _dynamicMemory[i - 1];
+			}
+			_dynamicMemory[index] = item;
+		}
+			// case IV - dynamic memory, not enough room
+		else if (_currSize >= _capacity && _isDynamic)
+		{
+			_capacity = newCapacity();
+			T *temp = new T[_capacity];
+			for (size_t i = 0; i < index; i++) // all elements up to index
+			{
+				temp[i] = _dynamicMemory[i];
+			}
+			for (size_t i = index + 1; i < _currSize; i++) // all elements from index+1
+			{
+				temp[i] = _dynamicMemory[i];
+			}
+			temp[index] = item; // adding new item itself
+			delete[] _dynamicMemory;
+			_dynamicMemory = new T[_capacity];
 			for (size_t i = 0; i < _currSize + 1; i++)
 			{
 				_dynamicMemory[i] = temp[i];
@@ -996,13 +1161,14 @@ public:
 	 * @return iterator pointing to the first item we've added
 	 */
 	template<class InputIterator>
-	Iterator insert(const InputIterator &it1, const InputIterator &it2, const Iterator &pos)
+	Iterator insert(const Iterator &pos, const InputIterator &it1, const InputIterator &it2)
 	{
-		int size = it2 - it1;
+		size_t size = it2 - it1;
+		size_t index = pos - begin();
 		// case I - static memory,  enough room
 		if (_currSize + size <= _capacity && !_isDynamic)
 		{
-			for (size_t i = pos; i > pos - size; i--) //shifting left to make room
+			for (size_t i = index; i > index - size; i--) //shifting left to make room
 			{
 				_staticMemory[i + size] = _staticMemory[i];
 			}
@@ -1013,11 +1179,11 @@ public:
 		{
 			_capacity = newCapacity();
 			_dynamicMemory = new T[_capacity];
-			for (size_t i = 0; i < pos - size; i++) // all elements up to pos-size
+			for (size_t i = 0; i < index - size; i++) // all elements up to pos-size
 			{
 				_dynamicMemory[i] = _staticMemory[i];
 			}
-			for (size_t i = pos + 1; i < _currSize; i++) // all elements from pos+1
+			for (size_t i = index + 1; i < _currSize; i++) // all elements from pos+1
 			{
 				_dynamicMemory[i] = _staticMemory[i];
 			}
@@ -1026,7 +1192,7 @@ public:
 			// case III - dynamic memory, enough room
 		else if (_currSize < _capacity && _isDynamic)
 		{
-			for (size_t i = pos; i > pos - size; i--) //shifting left to make room
+			for (size_t i = index; i > index - size; i--) //shifting left to make room
 			{
 				_dynamicMemory[i + size] = _dynamicMemory[i];
 			}
@@ -1037,20 +1203,20 @@ public:
 		{
 			_capacity = newCapacity();
 			T *temp = new T[_capacity];
-			//_loopProcess(temp,_dynamicMemory,0,index,true,0,0);
-			for (size_t i = 0; i < pos - size; i++) // all elements up to pos-size
+			for (size_t i = 0; i < index - size; i++) // all elements up to pos-size
 			{
 				temp[i] = _dynamicMemory[i];
 			}
-			//_loopProcess(temp,_dynamicMemory,index+1,_currSize,true,0,0);
-			for (size_t i = pos + 1; i < _currSize; i++) // all elements from pos+1
+			for (size_t i = index + size; i < _currSize; i++) // all elements from pos+1
 			{
 				temp[i] = _dynamicMemory[i];
 			}
-			std::copy(it1, it2, temp[pos - size]); // now adding items in between
+			for (size_t i = index - size; i < index + size; i++) // now adding items in between
+			{
+				temp[i] = _dynamicMemory[i];
+			}
 			delete[] _dynamicMemory;
 			_dynamicMemory = new T[_capacity];
-			//_loopProcess(_dynamicMemory,temp,0,_currSize+1,true,0,0);
 			for (size_t i = 0; i < _currSize + 1; i++)
 			{
 				_dynamicMemory[i] = temp[i];
@@ -1061,6 +1227,86 @@ public:
 		{
 			_isDynamic = true;
 		}
+		return pos;
+	}
+
+	/**CONST VERSION
+ * given some container, with two iterators t1 and t2, pointing to elements in the container
+ * insert all elements before pos in this vector
+ * @param it1 - some iterator
+ * @param it2 - some iterator
+ * @param pos - position to insert values
+ * @return iterator pointing to the first item we've added
+ */
+	template<class InputIterator>
+	constIterator insert(const constIterator &pos, const InputIterator &it1, const InputIterator
+	&it2)
+	{
+		size_t size = it2 - it1;
+		size_t index = pos - cbegin();
+		// case I - static memory,  enough room
+		if (_currSize + size <= _capacity && !_isDynamic)
+		{
+			for (size_t i = index; i > index - size; i--) //shifting left to make room
+			{
+				_staticMemory[i + size] = _staticMemory[i];
+			}
+			std::copy(it1, it2, pos); // now adding items in between
+		}
+			// case II - static memory, not enough room
+		else if (_currSize + size > _capacity && !_isDynamic)
+		{
+			_capacity = newCapacity();
+			_dynamicMemory = new T[_capacity];
+			for (size_t i = 0; i < index - size; i++) // all elements up to pos-size
+			{
+				_dynamicMemory[i] = _staticMemory[i];
+			}
+			for (size_t i = index + 1; i < _currSize; i++) // all elements from pos+1
+			{
+				_dynamicMemory[i] = _staticMemory[i];
+			}
+			std::copy(it1, it2, pos); // now adding items in between
+		}
+			// case III - dynamic memory, enough room
+		else if (_currSize < _capacity && _isDynamic)
+		{
+			for (size_t i = index; i > index - size; i--) //shifting left to make room
+			{
+				_dynamicMemory[i + size] = _dynamicMemory[i];
+			}
+			std::copy(it1, it2, pos); // now adding items in between
+		}
+			// case IV - dynamic memory, not enough room
+		else if (_currSize >= _capacity && _isDynamic)
+		{
+			_capacity = newCapacity();
+			T *temp = new T[_capacity];
+			for (size_t i = 0; i < index - size; i++) // all elements up to pos-size
+			{
+				temp[i] = _dynamicMemory[i];
+			}
+			for (size_t i = index + size; i < _currSize; i++) // all elements from pos+1
+			{
+				temp[i] = _dynamicMemory[i];
+			}
+			for (size_t i = index - size; i < index + size; i++) // now adding items in between
+			{
+				temp[i] = _dynamicMemory[i];
+			}
+			delete[] _dynamicMemory;
+			_dynamicMemory = new T[_capacity];
+			for (size_t i = 0; i < _currSize + 1; i++)
+			{
+				_dynamicMemory[i] = temp[i];
+			}
+		}
+		_currSize = _currSize + size;
+		if (_currSize > _staticCap && !_isDynamic) // this means we need to change to dynamic memory
+		{
+			_isDynamic = true;
+		}
+		return pos;
 	}
 
 	/**
@@ -1070,11 +1316,14 @@ public:
 	 * @param last - iterator pointing to last index
 	 */
 	template<class InputIterator>
-	VLVector(InputIterator &first, InputIterator &last):
+	VLVector(InputIterator first, InputIterator last):
 			_staticCap(StaticCapacity), _capacity(StaticCapacity), _currSize(INITIAL_SIZE),
 			_isDynamic(false)
 	{
-		insert(first, last, begin());
+		for (auto it = first; it != last; it++)
+		{
+			push_back(*it);
+		}
 	}
 
 };

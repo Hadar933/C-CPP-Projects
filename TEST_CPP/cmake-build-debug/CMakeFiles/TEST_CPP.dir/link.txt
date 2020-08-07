@@ -1,1 +1,1 @@
-/usr/bin/c++.exe -g  -Wl,--enable-auto-import CMakeFiles/TEST_CPP.dir/main.cpp.o  -o TEST_CPP.exe -Wl,--out-implib,libTEST_CPP.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+/usr/bin/c++.exe -g  -Wl,--enable-auto-import CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.o  -o TEST_CPP.exe -Wl,--out-implib,libTEST_CPP.dll.a -Wl,--major-image-version,0,--minor-image-version,0 

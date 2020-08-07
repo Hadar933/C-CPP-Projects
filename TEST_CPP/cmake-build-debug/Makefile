@@ -123,32 +123,32 @@ TEST_CPP/fast:
 	$(MAKE) -f CMakeFiles/TEST_CPP.dir/build.make CMakeFiles/TEST_CPP.dir/build
 .PHONY : TEST_CPP/fast
 
-main.o: main.cpp.o
+PresubmissionTests.o: PresubmissionTests.cpp.o
 
-.PHONY : main.o
+.PHONY : PresubmissionTests.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) -f CMakeFiles/TEST_CPP.dir/build.make CMakeFiles/TEST_CPP.dir/main.cpp.o
-.PHONY : main.cpp.o
+PresubmissionTests.cpp.o:
+	$(MAKE) -f CMakeFiles/TEST_CPP.dir/build.make CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.o
+.PHONY : PresubmissionTests.cpp.o
 
-main.i: main.cpp.i
+PresubmissionTests.i: PresubmissionTests.cpp.i
 
-.PHONY : main.i
+.PHONY : PresubmissionTests.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) -f CMakeFiles/TEST_CPP.dir/build.make CMakeFiles/TEST_CPP.dir/main.cpp.i
-.PHONY : main.cpp.i
+PresubmissionTests.cpp.i:
+	$(MAKE) -f CMakeFiles/TEST_CPP.dir/build.make CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.i
+.PHONY : PresubmissionTests.cpp.i
 
-main.s: main.cpp.s
+PresubmissionTests.s: PresubmissionTests.cpp.s
 
-.PHONY : main.s
+.PHONY : PresubmissionTests.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) -f CMakeFiles/TEST_CPP.dir/build.make CMakeFiles/TEST_CPP.dir/main.cpp.s
-.PHONY : main.cpp.s
+PresubmissionTests.cpp.s:
+	$(MAKE) -f CMakeFiles/TEST_CPP.dir/build.make CMakeFiles/TEST_CPP.dir/PresubmissionTests.cpp.s
+.PHONY : PresubmissionTests.cpp.s
 
 # Help Target
 help:
@@ -159,9 +159,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... TEST_CPP"
 	@echo "... edit_cache"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... PresubmissionTests.o"
+	@echo "... PresubmissionTests.i"
+	@echo "... PresubmissionTests.s"
 .PHONY : help
 
 

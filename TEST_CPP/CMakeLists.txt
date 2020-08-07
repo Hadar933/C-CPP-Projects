@@ -3,4 +3,4 @@ project(TEST_CPP)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(TEST_CPP main.cpp VLVector.hpp)
+add_executable(TEST_CPP VLVector.hpp PresubmissionTests.cpp)
