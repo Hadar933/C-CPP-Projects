@@ -1,0 +1,22 @@
+is Empty? 1
+size after 17 insertions: 17
+values at 2, 16, 15, 0, 7 are (concatenated) thearraythenirand
+size after 4 pop_backs: 13
+vector: 
+nir	is	the	writer	of	this	tester	and	have	to	make	up	seventeen	
+insert vector this#	is#	for#	extra#	array#	at position 11
+output reference to this#	
+vector: 
+nir	is	the	writer	of	this	tester	and	have	to	make								
+size after inserts: 18
+wrong capC
+erase many: this
+size after erases: 16
+vector: 
+nir	is	the	this	tester	and	have	to	make								
+insert PO at 13 ref: 
+vector: 
+nir	is	the	this	tester	and	have	to	make					PO				
+erase from 12 ref: 
+vector: 
+nir	is	the	this	tester	and	have	to	make				PO				

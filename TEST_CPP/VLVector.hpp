@@ -1076,7 +1076,7 @@ public:
 		{
 			_isDynamic = true;
 		}
-		return it; //TODO: this might not always be the case (for ex. if reallocation was made
+		return it;
 	}
 
 	/**
@@ -1150,7 +1150,7 @@ public:
 		{
 			_isDynamic = true;
 		}
-		return it; //TODO: this might not always be the case (for ex. if reallocation was made
+		return it;
 	}
 
 	/**
@@ -1169,10 +1169,11 @@ public:
 		// case I - static memory,  enough room
 		if (_currSize + size <= _capacity && !_isDynamic)
 		{
-			for (size_t i = index; i > index - size; i--) //shifting left to make room
+			for (size_t i = index+size; i > index; i--) //shifting left to make room
 			{
 				_staticMemory[i + size] = _staticMemory[i];
 			}
+
 			std::copy(it1, it2, pos); // now adding items in between
 		}
 			// case II - static memory, not enough room
@@ -1193,11 +1194,16 @@ public:
 			// case III - dynamic memory, enough room
 		else if (_currSize < _capacity && _isDynamic)
 		{
-			for (size_t i = index; i > index - size; i--) //shifting left to make room
+			for (size_t i = index+size; i > index; i--) //shifting left to make room
 			{
 				_dynamicMemory[i + size] = _dynamicMemory[i];
 			}
-			std::copy(it1, it2, pos); // now adding items in between
+			for(auto it=it1;it!=it2;it++)
+			{
+				size_t i = it-begin();
+				_dynamicMemory[i] = *it;
+			}
+			//std::copy(it1, it2, pos); // now adding items in between
 		}
 			// case IV - dynamic memory, not enough room
 		else if (_currSize >= _capacity && _isDynamic)
@@ -1249,7 +1255,7 @@ public:
 		// case I - static memory,  enough room
 		if (_currSize + size <= _capacity && !_isDynamic)
 		{
-			for (size_t i = index; i > index - size; i--) //shifting left to make room
+			for (size_t i = index + 1; i > index - size; i--) //shifting left to make room
 			{
 				_staticMemory[i + size] = _staticMemory[i];
 			}
@@ -1273,7 +1279,7 @@ public:
 			// case III - dynamic memory, enough room
 		else if (_currSize < _capacity && _isDynamic)
 		{
-			for (size_t i = index; i > index - size; i--) //shifting left to make room
+			for (size_t i = index + 1; i > index - size; i--) //shifting left to make room
 			{
 				_dynamicMemory[i + size] = _dynamicMemory[i];
 			}

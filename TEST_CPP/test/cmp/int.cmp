@@ -1,0 +1,27 @@
+is Empty? 1
+size after 100 insertions: 100
+values at 8, 42, 11, 28, 0 are 898, 8, 305, 146, 276
+size after 200 insertions: 200
+values at 81, 147, 55, 173, 35 are 715, 42, 569, 549, 911
+size after 300 insertions: 300
+values at 93, 55, 68, 203, 29 are 268, 569, 222, 914, 46
+size after 400 insertions: 400
+values at 225, 202, 17, 135, 167 are 336, 285, 772, 941, 181
+size after 490 pop_backs: 9
+vector: 
+276	255	13	373	761	498	149	484	898	
+insert vector 333	1677	729	2322	540	537	1338	1782	1737	at position 7
+output reference to 333
+vector: 
+276	255	13	373	761	498	149	333	1677	729	2322	540	537	1338	1782	1737	484	898	
+size after inserts: 18
+erase many: 498
+size after erases: 16
+vector: 
+276	255	13	498	149	333	1677	729	2322	540	537	1338	1782	1737	484	898	
+insert 46 at 13 ref: 46
+vector: 
+276	255	13	498	149	333	1677	729	2322	540	537	1338	1782	46	1737	484	898	
+erase from 12 ref: 46
+vector: 
+276	255	13	498	149	333	1677	729	2322	540	537	1338	46	1737	484	898	

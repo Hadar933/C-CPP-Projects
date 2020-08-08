@@ -1,0 +1,21 @@
+is Empty? 1
+size after 17 insertions: 17
+values at 14, 14, 16, 0, 4 are (concatenated) forforarraynirof
+size after 4 pop_backs: 13
+vector: 
+nir	is	the	writer	of	this	tester	and	have	to	make	up	seventeen	
+insert vector this#	is#	for#	extra#	array#	at position 11
+output reference to this#	
+vector: 
+nir	is	the	writer	of	this	tester	and	have	to	make	this#		is#		for#		extra#		array#		up	seventeen	
+size after inserts: 18
+erase many: this
+size after erases: 16
+vector: 
+nir	is	the	this	tester	and	have	to	make	this#		is#		for#		extra#		array#		up	seventeen	
+insert PO at 13 ref: PO
+vector: 
+nir	is	the	this	tester	and	have	to	make	this#		is#		for#		extra#		PO	array#		up	seventeen	
+erase from 12 ref: PO
+vector: 
+nir	is	the	this	tester	and	have	to	make	this#		is#		for#		PO	array#		up	seventeen	
