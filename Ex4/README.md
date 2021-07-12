@@ -17,6 +17,7 @@ the Hebrew university of Jerusalem
 in this project i've built a neural network that takes as inputs a
 28 * 28 binary image representing some number between 0 to 9,
 and outputs a "guess" for the number shown in the image.
+an important note is that I did not actually implement any deep learning principles, as the optimal weights and biases were given to us in adavance (therefore no SGD and back propagation)
 
 the network guesses correctly 96% of the time.
 
